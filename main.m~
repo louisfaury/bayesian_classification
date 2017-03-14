@@ -10,11 +10,10 @@ addpath(genpath('methods'));
 addpath(genpath('utils'));
 
 %% load dataset 
-dataset = 'bcw';
-ds = readtable(strcat(dataset,'.csv'));
-[training_data, testing_data, input_size] = sample_train_test(dataset,ds, 0.9);
+ds = readtable('breast-cancer-wisconsin.csv');
+[training_data, testing_data, input_size] = sample_train_test(ds, 09);
 
 %% IRLS methods 
-w = irls(training_data, input_size);
+
 
 %% Cross validaiton 
