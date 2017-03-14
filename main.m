@@ -11,7 +11,7 @@ addpath(genpath('utils'));
 
 %% load dataset 
 ds = dataset('File','breast-cancer-wisconsin.csv');
-% TODO : pick training and testing dataset
+[training_data, testing_data, input_size] = sample_train_test(ds, tt_ratio);
 
 %% IRLS methods 
 
