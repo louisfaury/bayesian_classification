@@ -5,7 +5,7 @@ function ce_loss = cross_entropy_loss_function(y,t)
 % @returns  : corresponding cross entropy loss
 % <============ HEADER =============>
 
-if (size(y,1) ~= size(t,1))
+if (size(y) ~= size(t))
     error('Output and labels sizes are not matching');
 end
 
