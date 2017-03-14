@@ -8,7 +8,7 @@ function [mb, t] = sample_mini_batch(mb_size, data, in_size)
 %             t <- corresponding targets
 % <============ HEADER =============>
 
-[mb,ix] = datasample(data(:,in_size),mb_size);
+[mb,ix] = datasample(data(:,1:in_size),mb_size);
 t = data(ix,in_size+1);
 
 end

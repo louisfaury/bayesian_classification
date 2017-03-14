@@ -8,8 +8,6 @@ function y = compute_output(activation_function, w, input, feature)
 % @returns  : y <- output
 % <============ HEADER =============>
 
-n = size(input,1);
-
 switch feature
     case 'linear'
         % do nothing
@@ -17,11 +15,11 @@ switch feature
         error('Unknwown feature');
 end
 
-y = input*w;
+z = input*w;
 
 switch activation_function
     case 'logistic_sigmoid'
-        arrayfun(@(x) 1/(1+exp(-x)), y);
+        y = arrayfun(@(x) 1/(1+exp(-x)), z);
     otherwise
         error('Unknwown activation function');
         

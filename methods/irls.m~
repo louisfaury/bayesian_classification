@@ -8,14 +8,14 @@ function w = irls(dataset, input_size)
 % <============ HEADER =============>
 
 %% algo parameters
-max_iter = 30000;
-mini_batch_size = 50;
+max_iter = 1000;
+mini_batch_size = 30;
 eps = 0.0001;
 feature = 'linear';
-learning_rate = 0.005;
+learning_rate = 0.1;
 loss = 0;
 loss_array = zeros(max_iter,1);
-cor_hessian = 0.0001;
+cor_hessian = 0.001;
 
 %% init
 w = randn(input_size,1); % random init
@@ -42,8 +42,8 @@ for iter=1:max_iter
    w = w - learning_rate*d;
    
    % convergence check
-   ytot = compute_output('logistic_sigmoid', w, dataset(:,1:input_size), feature);
-   nloss = cross_entropy_loss_function(ytot,dataset(:,input_size+1));
+   y = compute_output('logistic_sigmoid', w, dataset(:,1:input_size), feature);
+   nloss = cross_entropy_loss_function(y,dataset(:,input_size+1));
 
    if (iter>1)
        if (abs(nloss-loss)<eps)
@@ -55,8 +55,8 @@ for iter=1:max_iter
    loss_array(iter,1) = loss;
 end
 
+end
+
 %% plots
 
-plot(1:iter,loss_array(1:iter));
-
-end
+plot(
