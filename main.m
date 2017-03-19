@@ -14,8 +14,8 @@ dataset_name = 'bcw';
 ds = readtable(strcat(dataset_name,'.csv'));
 
 %% data normalization and visualization 
-[ds, input_size] = normalize_data(dataset_name,ds);
-visualize_data(ds, input_size);
+%[ds, input_size] = normalize_data(dataset_name,ds);
+%visualize_data(ds, input_size);
 
 %% train-test sub-datasets sample
 [training_data, testing_data] = sample_train_test(ds, 0.9);
