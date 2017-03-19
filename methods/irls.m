@@ -8,7 +8,7 @@ function w = irls(dataset, input_size)
 % <============ HEADER =============>
 
 %% algo parameters
-max_iter = 20000;
+max_iter = 4000;
 mini_batch_size = 40;
 eps = 5e-7;
 feature = 'linear';
@@ -56,7 +56,11 @@ for iter=1:max_iter
 end
 
 %% plots
-
-plot((1:iter-1),loss_array(1:iter-1));
+figure;
+plot((1:iter-1),loss_array(1:iter-1),'LineWidth',2,'Color',[0.3 0.3 0.8]);
+title('Iterative Reweighted Least Square Learning Curve');
+xlabel('Iterations');
+ylabel('Loss (cross-entropy)');
+legend('IRLS learning curve');
 
 end

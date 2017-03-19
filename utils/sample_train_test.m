@@ -6,14 +6,11 @@ function [training_ds, testing_ds] = sample_train_test(ds, tt_ratio)
 %             ds <- dataset (table type)
 % @returns  : training_ds <- sampled training set
 %             testing_ds <- sampled training set
-%             in_size <- dimensionality of inputs
 % <============ HEADER =============>
 
-
-%normalized_data = [table2array(ds(:,1:in_size)) , strcmp(ds{:,in_size+1},'malign')];
 m = ceil(size(ds,1)*tt_ratio);
-[training_ds, idx] = datasample(normalized_data, m, 'Replace', false);
-testing_ds = normalized_data;
+[training_ds, idx] = datasample(ds, m, 'Replace', false);
+testing_ds = ds;
 testing_ds(idx,:) = [];
 
 end

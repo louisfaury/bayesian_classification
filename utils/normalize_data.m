@@ -1,9 +1,10 @@
-function n_ds = normalize_data(name, ds)
+function [n_ds, input_size] = normalize_data(name, ds)
 % <============ HEADER =============>
 % @brief    : normalize the mixed data retrieved in dataset (string go to integer)
 % @params   : name <- dataset's name
 %             ds <- dataset (table type)
 % @returns  : n_ds <- normalized dataset
+%             input_size <- size of input in dataset
 % <============ HEADER =============>
 
 switch (name)

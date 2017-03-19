@@ -14,11 +14,11 @@ dataset_name = 'bcw';
 ds = readtable(strcat(dataset_name,'.csv'));
 
 %% data normalization and visualization 
-ds = normalize_data(dataset_name,ds);
+[ds, input_size] = normalize_data(dataset_name,ds);
 %visualize_data(ds);
 
 %% train-test sub-datasets sample
-[training_data, testing_data, input_size] = sample_train_test(ds, 0.9);
+[training_data, testing_data] = sample_train_test(ds, 0.9);
 
 %% IRLS methods 
 w = irls(training_data, input_size);
@@ -26,4 +26,4 @@ w = irls(training_data, input_size);
 
 % TODO : add bias, perform CV
 
-%% Cross validaiton 
+%% Cross validation 
