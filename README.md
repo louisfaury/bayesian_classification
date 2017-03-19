@@ -1,5 +1,5 @@
  • Implementation of basic bayesian (and GML to be compared with) methods for binary classification on the *Breast Cancer (Diagnostic) Wiscounsin* dataset.  
- • The full dataset is given below : 
+ • The full dataset is composed of 699 points laying in a 10-dimensional space. It is detailed below : 
 
 
     Radius    Texture    Perimeter    Area    Smoothness    Compactness    Concacity    Concavity    Symetry    Diagnostic
