@@ -16,5 +16,8 @@ ds = readtable(strcat(dataset,'.csv'));
 
 %% IRLS methods 
 w = irls(training_data, input_size);
+%irls_cv(w,training_data, test_data, input_size);
+
+% TODO : add bias, perform CV
 
 %% Cross validaiton 

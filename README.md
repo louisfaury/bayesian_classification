@@ -1,4 +1,4 @@
- • Implementation of basic bayesian (and GML to be compared with) methods for binary classification on the *Breast Cancer (Diagnostic) Wiscounsin* dataset. 
+ • Implementation of basic bayesian (and GML to be compared with) methods for binary classification on the *Breast Cancer (Diagnostic) Wiscounsin* dataset.  
  • The full dataset is given below : 
 
 

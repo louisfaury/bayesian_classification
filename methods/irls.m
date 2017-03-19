@@ -8,17 +8,17 @@ function w = irls(dataset, input_size)
 % <============ HEADER =============>
 
 %% algo parameters
-max_iter = 30000;
-mini_batch_size = 50;
-eps = 0.0001;
+max_iter = 20000;
+mini_batch_size = 40;
+eps = 5e-7;
 feature = 'linear';
-learning_rate = 0.005;
+learning_rate = 0.001;
 loss = 0;
 loss_array = zeros(max_iter,1);
 cor_hessian = 0.0001;
 
 %% init
-w = randn(input_size,1); % random init
+w = zeros(input_size,1); % zero init
 
 %% run
 for iter=1:max_iter
@@ -27,7 +27,7 @@ for iter=1:max_iter
    y = compute_output('logistic_sigmoid', w, mb, feature);
    
    % update
-   R = diag(y-t);
+   R = diag(y.*(1-y));
    switch feature
        case 'linear'
            phi = mb;
@@ -57,6 +57,6 @@ end
 
 %% plots
 
-plot(1:iter,loss_array(1:iter));
+plot((1:iter-1),loss_array(1:iter-1));
 
 end
