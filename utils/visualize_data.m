@@ -1,4 +1,4 @@
-function visualize_data(dataset,input_size)
+function proj_matrix = visualize_data(dataset,input_size)
 % <============ HEADER =============>
 % @brief    : visualization tools for given dataset : 
 %                   -> pca
@@ -15,7 +15,7 @@ empirical_cov = (data-mean(data))'*(data-mean(data));
 retained_dim = 2;
 %explained_variance = trace(D(1:retained_dim,1:retained_dim))/ trace(D); %=0.76
 proj_matrix = V(:,1:retained_dim)';
-proj_data = data*proj_matrix';
+proj_data = (data-mean(data))*proj_matrix';
 
 %plots
 if (retained_dim==2)

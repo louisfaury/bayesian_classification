@@ -15,15 +15,13 @@ ds = readtable(strcat(dataset_name,'.csv'));
 
 %% data normalization and visualization 
 %[ds, input_size] = normalize_data(dataset_name,ds);
-%visualize_data(ds, input_size);
+%proj_matrix = visualize_data(ds, input_size);
 
-%% train-test sub-datasets sample
+% IRLS solution vizualisation 
+[w, lc] = irls(training_data, input_size); % TODO : add bias and penalization options 
+% plots learning curve and end solution visualization 
+
+
+%% F-fold CV  %%TODO
 [training_data, testing_data] = sample_train_test(ds, 0.9);
-
-%% IRLS methods 
-w = irls(training_data, input_size);
 %irls_cv(w,training_data, test_data, input_size);
-
-% TODO : add bias, perform CV
-
-%% Cross validation 
