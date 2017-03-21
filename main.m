@@ -18,9 +18,10 @@ ds = readtable(strcat(dataset_name,'.csv'));
 %visualize_data(ds, is);
 
 % IRLS solution vizualisation 
-[w, lc] = irls(ds, is,'L2'); 
-visualize_solution(w(1:is), ds, is, lc,'L2');
+[w, lc] = irls(ds, is); 
+visualize_solution(w(1:is), ds, is, lc, 'L2');
 
 %% F-fold CV  %%TODO
-[training_data, testing_data] = sample_train_test(ds, 0.9);
+%fold
+%[training_data, testing_data] = sample_train_test(ds, 0.9);
 %irls_cv(w,training_data, test_data, input_size);
