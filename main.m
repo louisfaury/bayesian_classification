@@ -18,8 +18,8 @@ ds = readtable(strcat(dataset_name,'.csv'));
 %visualize_data(ds, is);
 
 % IRLS solution vizualisation 
-[w, lc] = irls(ds, is,'L1'); 
-visualize_solution(w(1:is), ds, is, lc,'L1');
+[w, lc] = irls(ds, is,'L2'); 
+visualize_solution(w(1:is), ds, is, lc,'L2');
 
 %% F-fold CV  %%TODO
 [training_data, testing_data] = sample_train_test(ds, 0.9);
