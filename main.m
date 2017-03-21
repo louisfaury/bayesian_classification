@@ -12,15 +12,14 @@ addpath(genpath('utils'));
 %% load dataset 
 dataset_name = 'bcw';
 ds = readtable(strcat(dataset_name,'.csv'));
+[ds, is] = normalize_data(dataset_name,ds);
 
-%% data normalization and visualization 
-%[ds, input_size] = normalize_data(dataset_name,ds);
-%proj_matrix = visualize_data(ds, input_size);
+%% data visualization 
+%visualize_data(ds, is);
 
 % IRLS solution vizualisation 
-[w, lc] = irls(training_data, input_size); % TODO : add bias and penalization options 
-% plots learning curve and end solution visualization 
-
+[w, lc] = irls(ds, is); % TODO : add bias and penalization options
+visualize_solution(w, ds, is, lc);
 
 %% F-fold CV  %%TODO
 [training_data, testing_data] = sample_train_test(ds, 0.9);

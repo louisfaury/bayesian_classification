@@ -1,10 +1,12 @@
-function w = irls(dataset, input_size)
+function [w, lc] = irls(dataset, input_size, opt)
 % <============ HEADER =============>
 % @brief    : computes the ML solution for the logistic regression program.
 %             feature space is input space 
 % @params   : dataset
 %             input_size <- input vectors dimensionality
+%             opt <- penalization option : '', 'L1' or 'L2'
 % @returns  : learned vector for prediction
+%             learning curve
 % <============ HEADER =============>
 
 %% algo parameters
@@ -55,12 +57,6 @@ for iter=1:max_iter
    loss_array(iter,1) = loss;
 end
 
-%% plots
-figure;
-plot((1:iter-1),loss_array(1:iter-1),'LineWidth',2,'Color',[0.3 0.3 0.8]);
-title('Iterative Reweighted Least Square Learning Curve');
-xlabel('Iterations');
-ylabel('Loss (cross-entropy)');
-legend('IRLS learning curve');
+lc = loss_array(1:iter-1);
 
 end
