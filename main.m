@@ -18,8 +18,8 @@ ds = readtable(strcat(dataset_name,'.csv'));
 %visualize_data(ds, is);
 
 % IRLS solution vizualisation 
-[w, lc] = irls(ds, is,'L1'); 
-visualize_solution(w(1:is), ds, is, lc, 'L1');
+[w, lc] = irls(ds, is); 
+visualize_solution(w(1:is), ds, is, lc, '');
 
 %% F-fold CV  %%TODO
 %fold

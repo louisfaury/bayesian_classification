@@ -32,7 +32,7 @@ x2 = [-10:10];
 sig = @(x,y) 1./(1+exp(-(proj_w(1).*x + proj_w(2).*y)));
 Z = sig(X,Y);
 map = ([ 0.1:0.01:0.9; 0.9:-0.01:0.1; 0.2*ones(1,81)])';
-subplot(1,2,2); contourf(X,Y,Z,40,'LineStyle','none'); colormap(map); colorbar; hold on; 
+subplot(1,2,2); contourf(X,Y,Z,40,'LineStyle','none'); hold on; contour(X,Y,Z,[0.25, 0.5, 0.75],'Showtext','on','LineColor','black'); colormap(map); colorbar; hold on; 
 
 if (retained_dim==2)
     hold on;

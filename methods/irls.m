@@ -19,7 +19,7 @@ loss = 0;
 loss_array = zeros(max_iter,1);
 cor_hessian = 0.0001;
 lambda_l1 = 2;
-lambda_l2 = 5;
+lambda_l2 = 10;
 
 %% init
 w = zeros(input_size+1,1); % zero init
