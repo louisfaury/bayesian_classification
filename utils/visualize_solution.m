@@ -11,10 +11,10 @@ function visualize_solution(w, ds, input_size, lc, opt)
 % Plot learning curve 
 figure('units','normalized','outerposition',[0 0 1 1])
 subplot(1,2,1); plot(lc,'LineWidth',3,'Color',[0.3 0.3 0.8]);
-title('Iterative Reweighted Least Square Learning Curve');
+title(['Iterative Reweighted Least Square Learning Curve with' ' ',opt, ' ', 'penalization']);
 xlabel('Iterations');
 ylabel('Loss (cross-entropy)');
-legend('IRLS learning curve');
+legend(['Iterative Reweighted Least Square Learning Curve with',' ', opt,' ', 'penalization']);
 
 % projection rule  %TODO : watch out 0 term for learned proj. vector 
 data = ds(:,1:input_size);
@@ -45,7 +45,7 @@ subplot(1,2,2); hold on; h = plot(x1,x2,'-.','LineWidth',3,'Color',[0.4, 0.5, 0.
 title('PCA analysis for dataset');
 xlabel('$e_1$','Interpreter','latex');
 ylabel('$e_2$','Interpreter','latex');
-legend([m,b,h],'Malign','Benign','Decision boundary : IRLS');
+legend([m,b,h],'Malign','Benign',strcat('Decision boundary : IRLS-',opt));
 
 
 
