@@ -26,7 +26,7 @@ ds = readtable(strcat(dataset_name,'.csv'));
 % opt_L2 = struct('name','L2','hp',10);               % RIDGE penalization
 % opt = opt_up;
 % [w, prior, lc] = irls(ds, is, opt); 
-% @visualize_solution(w(1:is), ds, is, lc, opt);
+% visualize_solution(w(1:is), ds, is, lc, opt);
 
 
 %% F-fold CV  %%TODO
