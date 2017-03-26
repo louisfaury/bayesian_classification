@@ -25,7 +25,7 @@ opt_up    = struct('name','unpenalized','hp',[]);   % unpenalized IRLS
 opt_L1 = struct('name','L1','hp',2);                % LASSO penalization
 opt_L2 = struct('name','L2','hp',10);               % RIDGE penalization
 opt = opt_up;
-[w, lc] = irls(ds, is, opt); 
+[w, prior, lc] = irls(ds, is, opt); 
 visualize_solution(w(1:is), ds, is, lc, opt);
 
 

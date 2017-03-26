@@ -1,4 +1,4 @@
-function [w, lc] = irls(dataset, input_size, opt)
+function [w, prior, lc] = irls(dataset, input_size, opt)
 % <============ HEADER =============>
 % @brief    : computes the ML solution for the logistic regression program.
 %             feature space is input space 
@@ -6,6 +6,7 @@ function [w, lc] = irls(dataset, input_size, opt)
 %             input_size <- input vectors dimensionality
 %             opt <- penalization option : '', 'L1' or 'L2'
 % @returns  : learned vector for prediction
+%             learned prior for the '+1' class 
 %             learning curve
 % <============ HEADER =============>
 
@@ -78,5 +79,8 @@ if (nargin>2)
    end
 end
 lc = loss_array(1:iter-1);
+
+%% learning priors (naive)
+prior = sum(dataset(:,input_size+1))/size(dataset,1);
 
 end
