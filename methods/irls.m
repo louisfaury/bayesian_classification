@@ -18,8 +18,7 @@ learning_rate = 0.002;
 loss = 0;
 loss_array = zeros(max_iter,1);
 cor_hessian = 0.0001;
-lambda_l1 = 2;
-lambda_l2 = 10;
+lambda = opt.hp;
 
 %% init
 w = zeros(input_size+1,1); % zero init
@@ -41,16 +40,12 @@ for iter=1:max_iter
     
    H = phi'*R*phi + cor_hessian*eye(input_size+1);  % hessian with correction for bad conditioning;
    g = phi'*(y-t);                                  % gradient
-   if (nargin>2)                                    % penalisation correction
-       switch (opt)
-           case 'L1'
-               g = g + lambda_l1*sign(w);
-           case 'L2'
-                H = H + lambda_l2*eye(size(H));
-                g = g + lambda_l2*w;
-           otherwise
-               error('Unknown penalisation keyword');
-       end
+   switch (opt.name)
+       case 'L1'
+           g = g + lambda*sign(w);
+       case 'L2'
+           H = H + lambda*eye(size(H));
+           g = g + lambda*w;
    end
    d = linsolve(H,g);                               % Newton descent direction
    
@@ -59,15 +54,11 @@ for iter=1:max_iter
    % convergence check
    ytot = compute_output('logistic_sigmoid', w(1:input_size), w(input_size+1), dataset(:,1:input_size), feature);
    nloss = cross_entropy_loss_function(ytot,dataset(:,input_size+1));
-   if (nargin>2)
-       switch (opt)
-           case 'L1'
-               nloss  = nloss + lambda_l1*sum(abs(w));
-           case 'L2'
-               nloss = nloss + 0.5*lambda_l2*(w'*w);
-           otherwise
-               error('Unknown penalisation keyword');
-       end
+   switch (opt.name)
+       case 'L1'
+           nloss  = nloss + lambda*sum(abs(w));
+       case 'L2'
+           nloss = nloss + 0.5*lambda*(w'*w);
    end
    
    if (iter>1)

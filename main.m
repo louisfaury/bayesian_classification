@@ -14,14 +14,21 @@ dataset_name = 'bcw';
 ds = readtable(strcat(dataset_name,'.csv'));
 [ds, is] = normalize_data(dataset_name,ds);
 
+
 %% data visualization 
 %visualize_data(ds, is);
 
+
+%% solution vizualisation
 % IRLS solution vizualisation 
-[w, lc] = irls(ds, is); 
-visualize_solution(w(1:is), ds, is, lc, '');
+opt_up    = struct('name','unpenalized','hp',[]);   % unpenalized IRLS
+opt_L1 = struct('name','L1','hp',2);                % LASSO penalization
+opt_L2 = struct('name','L2','hp',10);               % RIDGE penalization
+opt = opt_up;
+[w, lc] = irls(ds, is, opt); 
+visualize_solution(w(1:is), ds, is, lc, opt);
+
 
 %% F-fold CV  %%TODO
-%fold
-%[training_data, testing_data] = sample_train_test(ds, 0.9);
-%irls_cv(w,training_data, test_data, input_size);
+fold = 10;
+irls_fold_cv(ds, is, fold);
