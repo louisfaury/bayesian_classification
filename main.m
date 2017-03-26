@@ -21,14 +21,14 @@ ds = readtable(strcat(dataset_name,'.csv'));
 
 %% solution vizualisation
 % IRLS solution vizualisation 
-opt_up    = struct('name','unpenalized','hp',[]);   % unpenalized IRLS
-opt_L1 = struct('name','L1','hp',2);                % LASSO penalization
-opt_L2 = struct('name','L2','hp',10);               % RIDGE penalization
-opt = opt_up;
-[w, prior, lc] = irls(ds, is, opt); 
-visualize_solution(w(1:is), ds, is, lc, opt);
+% opt_up    = struct('name','unpenalized','hp',[]);   % unpenalized IRLS
+% opt_L1 = struct('name','L1','hp',2);                % LASSO penalization
+% opt_L2 = struct('name','L2','hp',10);               % RIDGE penalization
+% opt = opt_up;
+% [w, prior, lc] = irls(ds, is, opt); 
+% @visualize_solution(w(1:is), ds, is, lc, opt);
 
 
 %% F-fold CV  %%TODO
 fold = 10;
-irls_fold_cv(ds, is, fold);
+irls_cv(ds, is, fold);
