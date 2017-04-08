@@ -13,7 +13,7 @@ function [w, prior, lc] = irls(dataset, input_size, opt)
 %% algo parameters
 max_iter = 5000;
 mini_batch_size = 40;
-eps = 1e-5;
+eps = 1e-4;
 feature = 'linear';
 learning_rate = 0.002;
 loss = 0;
@@ -43,10 +43,10 @@ for iter=1:max_iter
    g = phi'*(y-t);                                  % gradient
    switch (opt.name)
        case 'L1'
-           g = g + lambda*sign(w);
+           g = g + lambda*[sign(w(1:input_size));0];
        case 'L2'
-           H = H + lambda*eye(size(H));
-           g = g + lambda*w;
+           H = H + lambda*[eye(size(H)-[1,1]),zeros(size(H,1)-1,1);zeros(1,size(H,2))];
+           g = g + lambda*([w(1:input_size);0]);
    end
    d = linsolve(H,g);                               % Newton descent direction
    
@@ -57,9 +57,9 @@ for iter=1:max_iter
    nloss = cross_entropy_loss_function(ytot,dataset(:,input_size+1));
    switch (opt.name)
        case 'L1'
-           nloss  = nloss + lambda*sum(abs(w));
+           nloss  = nloss + lambda*sum(abs(w(1:input_size)));
        case 'L2'
-           nloss = nloss + 0.5*lambda*(w'*w);
+           nloss = nloss + 0.5*lambda*(w(1:input_size)'*w(1:input_size));
    end
    
    if (iter>1)
@@ -73,7 +73,7 @@ for iter=1:max_iter
 end
 
 if (nargin>2)
-   if (strcmp(opt,'L1'))
+   if (strcmp(opt.name,'L1'))
       % sparse formulation 
       w = w.*double(w>0.001);
    end
