@@ -14,7 +14,7 @@ function [fmeasure, roc] = cv_binary_classification(w, test_set, prior, is)
 % compute estimates 
 yest = compute_output('logistic_sigmoid', w(1:is), w(is+1),test_set(:,1:is), 'linear');
 t_test = test_set(:,is+1);
-t_est = round(yest);
+t_est = round(yest+0.05);
 
 % computes TP and FP 
 TP = sum(double(t_test  & t_est));

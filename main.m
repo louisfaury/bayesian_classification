@@ -17,7 +17,7 @@ ds = readtable(strcat(dataset_name,'.csv'));
 
 
 %% data visualization 
-%  visualize_data(ds, is);
+  visualize_data(ds, is);
 
 
 %% solution vizualisation
@@ -26,10 +26,10 @@ ds = readtable(strcat(dataset_name,'.csv'));
  opt_L1 = struct('name','L1','hp',0.1);              % LASSO penalization
  opt_L2 = struct('name','L2','hp',0.3);              % RIDGE penalization
  opt = opt_up;
- [w, prior, lc] = irls(ds, is, opt); 
- visualize_solution(w(1:is), ds, is, lc, opt);
+% [w, prior, lc] = irls(ds, is, opt); 
+% visualize_solution(w(1:is), ds, is, lc, opt);
 
 
 %% F-fold CV  
-fold = 5;
+fold = 20;
 irls_cv(ds, is, fold);

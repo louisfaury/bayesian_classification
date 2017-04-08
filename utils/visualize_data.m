@@ -40,23 +40,17 @@ legend([m,b],'Positive','Negative');
 
 
 %% Hist plots 
-m = [];
-b = [];
+ixp = find(dataset(:,input_size+1));
+ixn = find(~dataset(:,input_size+1));
+figure('units','normalized','outerposition',[0 0 1 1]);
+subplot(3,3,1); histogram(dataset(ixp,1),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,1),'FaceColor','green'); title('Numbers of pregnancy'); legend('Positive','Negative');
+subplot(3,3,2); histogram(dataset(ixp,2),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,2),'FaceColor','green'); title('Plasma Glucose Concentration'); legend('Positive','Negative');
+subplot(3,3,3); histogram(dataset(ixp,3),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,3),'FaceColor','green'); title('Diastolic blood pressure'); legend('Positive','Negative');
+subplot(3,3,4); histogram(dataset(ixp,4),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,4),'FaceColor','green'); title('Triceps skin fold thickness'); legend('Positive','Negative');
+subplot(3,3,5); histogram(dataset(ixp,5),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,5),'FaceColor','green'); title('2-Hour serum insulin'); legend('Positive','Negative');
+subplot(3,3,6); histogram(dataset(ixp,6),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,6),'FaceColor','green'); title('Body mass index'); legend('Positive','Negative');
+subplot(3,3,7); histogram(dataset(ixp,7),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,7),'FaceColor','green'); title('iabetes pedigree function'); legend('Positive','Negative');
+subplot(3,3,8); histogram(dataset(ixp,8),11,'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,8),11,'FaceColor','green'); title('Age'); legend('Positive','Negative');
 
-for i=1:size(dataset,1)
-    % really unefficient but only way to have nice legends
-    for j = 1:input_size
-       if (dataset(i,input_size+1))
-           m = [m;[j,dataset(i,j)+0.2*randn]];
-       else
-           b = [b;[j,dataset(i,j)+0.2*randn]];
-       end
-    end
-end
 
-subplot(1,2,2); hold on; scatter(m(:,1),m(:,2),60,'MarkerFaceColor',[0.9, 0.2, 0.3],'MarkerEdgeColor',[0.9, 0.2, 0.3],'MarkerFaceAlpha',0.5,'MarkerEdgeAlpha',0.5);
-subplot(1,2,2); hold on; scatter(b(:,1),b(:,2),60,'MarkerFaceColor',[0.1, 0.9, 0.4],'MarkerEdgeColor',[0.1, 0.9, 0.4],'MarkerFaceAlpha',0.5,'MarkerEdgeAlpha',0.5);
-legend('Malign','Benign');
-xlabel('Input index');
-title('Scatter plot representation of data');
 end

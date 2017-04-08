@@ -8,7 +8,7 @@ function irls_cv(dataset, is, fold)
 % <============ HEADER =============>
 
 %% hyper-parameters 
-tt_ratio = 0.9;
+tt_ratio = 0.8;
 opt_names = {'unpenalized','L1','L2'};
 l1_penalties = [0.05, 0.2, 0.5];
 l2_penalties = [0.05, 0.2, 0.5];
@@ -54,7 +54,7 @@ for i = 1:n
     plot(roc_points(i,2),roc_points(i,1),'o','MarkerSize',20,'MarkerEdgeColor',[rand rand rand], 'MarkerFaceColor',[rand rand rand]); hold on;
 end
 axis([0 1 0 1]);
-l = legend('IRLS','IRLS, $\lambda_1 = 0.1$','IRLS, $\lambda_1 = 1$','IRLS, $\lambda_1 = 2$', 'IRLS, $\lambda_2 = 0.5$', 'IRLS, $\lambda_2 = 2$');
+l = legend('IRLS','LASSO, $\lambda_1 = 0.05$','LASSO, $\lambda_1 = 0.2$','LASSO, $\lambda_1 = 0.5$', 'RIDGE, $\lambda_2 = 0.05$', 'RIDGE, $\lambda_2 = 0.2$','RIDGE, $\lambda_2 = 0.5$');
 set(l,'Interpreter','latex');
 
 
