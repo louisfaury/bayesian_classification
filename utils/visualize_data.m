@@ -10,6 +10,7 @@ function visualize_data(dataset,input_size)
 
 %% PCA 
 data = dataset(:,1:input_size);
+data = data ./ sqrt(var(data));
 empirical_cov = (data-mean(data))'*(data-mean(data));
 [V,D] = eigs(empirical_cov,input_size,'sm');
 retained_dim = 2;
@@ -35,7 +36,7 @@ end
 title('PCA analysis for dataset');
 xlabel('$e_1$','Interpreter','latex');
 ylabel('$e_2$','Interpreter','latex');
-legend([m,b],'Malign','Benign');
+legend([m,b],'Positive','Negative');
 
 
 %% Hist plots 

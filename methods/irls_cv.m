@@ -8,10 +8,10 @@ function irls_cv(dataset, is, fold)
 % <============ HEADER =============>
 
 %% hyper-parameters 
-tt_ratio = 0.8;
+tt_ratio = 0.9;
 opt_names = {'unpenalized','L1','L2'};
-l1_penalties = [0.1, 1, 2];
-l2_penalties = [0.5, 2, 5];
+l1_penalties = [0.05, 0.2, 0.5];
+l2_penalties = [0.05, 0.2, 0.5];
 n = 1+size(l1_penalties,2)+size(l2_penalties,2);
 f_measures = zeros(n,fold);
 roc_points = zeros(n,2);
@@ -44,7 +44,7 @@ end
 
 %% plots 
 figure('units','normalized','outerposition',[0 0 1 1])
-subplot(1,2,1); boxplot(f_measures','Labels',{'IRLS','LASSO = 0.1','LASSO = 1','LASSO = 2','RIDGE = 0.5','RIDGE = 2','RIDGE = 5'});
+subplot(1,2,1); boxplot(f_measures','Labels',{'IRLS','LASSO = 0.05','LASSO = 0.2','LASSO = 0.5','RIDGE = 0.05','RIDGE = 0.2','RIDGE = 0.5'});
 xlabel('Method');
 ylabel('F-measure statistics');
 title('10-fold cross validation using F-measure');

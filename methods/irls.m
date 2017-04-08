@@ -13,7 +13,7 @@ function [w, prior, lc] = irls(dataset, input_size, opt)
 %% algo parameters
 max_iter = 5000;
 mini_batch_size = 40;
-eps = 1e-4;
+eps = 1e-5;
 feature = 'linear';
 learning_rate = 0.002;
 loss = 0;
@@ -22,7 +22,7 @@ cor_hessian = 0.0001;
 lambda = opt.hp;
 
 %% init
-w = zeros(input_size+1,1); % zero init
+w = zeros(input_size+1,1);
 
 %% run
 for iter=1:max_iter

@@ -18,6 +18,7 @@ legend(['Iterative Reweighted Least Square Learning Curve with',' ', opt.name,' 
 
 % projection rule  %TODO : watch out 0 term for learned proj. vector 
 data = ds(:,1:input_size);
+data = data ./ sqrt(var(data));
 empirical_cov = (data-mean(data))'*(data-mean(data));
 [V,~] = eigs(empirical_cov,input_size,'sm');
 retained_dim = 2;
@@ -26,8 +27,8 @@ proj_data = (data-mean(data))*proj_matrix';
 proj_w = proj_matrix*w;
 
 
-x1 = [-20:10];
-x2 = [-10:10];
+x1 = [-6:6];
+x2 = [-6:6];
 [X,Y] = meshgrid(x1,x2);
 sig = @(x,y) 1./(1+exp(-(proj_w(1).*x + proj_w(2).*y)));
 Z = sig(X,Y);
