@@ -53,10 +53,10 @@ end
 % 
 % subplot(1,2,2); hold on; h = plot(x1,x2,'-.','LineWidth',3,'Color',[0.4, 0.5, 0.9]);
 
-title('PCA analysis for dataset');
+title('Class probability (projected) with Laplace Approximation');
 xlabel('$e_1$','Interpreter','latex');
 ylabel('$e_2$','Interpreter','latex');
-legend([m,b],'Malign','Benign',strcat('Decision boundary : Laplace Approximation'));
+legend([m,b,c],'Malign','Benign',strcat('Decision boundary : Laplace Approximation'));
 
 
 

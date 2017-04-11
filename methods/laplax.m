@@ -32,9 +32,9 @@ for i=1:max_iter
 end
 
 % Estimating the Hessian of log(posterior) at MAP value 
-wMap = [w;1];
-X = ds(:,1:is); y = outp(wMap);
+X = ds(:,1:is); y = outp(w);
 Sn = inv(inv(So) + X'*diag(y.*(1-y))*X);
+wMap = [w;0];
 
 
 end
