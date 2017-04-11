@@ -30,12 +30,21 @@ ds = readtable(strcat(dataset_name,'.csv'));
  % [w, prior, lc] = irls(ds, is, opt); 
  % visualize_solution(w(1:is), ds, is, lc, opt);
 % ---------------------------
+% ---------------------------
 % Bayesian learning and visualization
+% - - - - - - - - - - - - - - - - - -
+% laplace approximation for posterior
+% - - - - - - - - - - - - - - - - - -
  [w,S] = laplax(ds,is);
  opt.laplax = struct('name','Laplace approximation');
- visualize_solution(w(1:is), ds, is, 1, opt.laplax);     % Basic visualization 
- %visualize_pdb(w,S,is)                                   % Visualization  TODO 
-
+ visualize_solution(w(1:is), ds, is, 1, opt.laplax);    % Basic visualization 
+ %visualize_pdb(w,S,is)                                 % Visualization  TODO 
+% - - - - - - - - - - - - - - - - - -
+% grid based posterior 
+% - - - - - - - - - - - - - - - - - -
+% - - - - - - - - - - - - - - - - - -
+% Expectation-propagation
+% - - - - - - - - - - - - - - - - - -
     
 
 
