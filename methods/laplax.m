@@ -1,4 +1,4 @@
-function q = laplax(ds, is)
+function [wMap,Sn] = laplax(ds, is)
 % <============ HEADER =============>
 % @brief    : computes the posterior approximation with Laplace
 %             approximation
@@ -10,16 +10,15 @@ function q = laplax(ds, is)
 
 n = is;
 mo = zeros(n,1);
-So = eye(n);
+So = 0.1*eye(n);
 prior = gaussianDb(n,mo,So); % start with centered Gaussian prior 
 outp  = @(w) compute_output('logistic_sigmoid',w,0,ds(:,1:is),'linear');
 
 % Finding the posterior MAP value
 max_iter = 10;
 lr = 1;
-obj = @(x) -log(prior(x)) + cross_entropy_loss_function(outp(x),ds(:,is+1));
+log_posterior = @(x) log(prior(x)) + cross_entropy_loss_function(outp(x),ds(:,is+1));
 w = zeros(n,1);
-obja = obj(w);
 eps = 0.001;
 for i=1:max_iter
    X = ds(:,1:is); y = outp(w); t = ds(:,is+1); % design - pred - labels 
@@ -31,6 +30,11 @@ for i=1:max_iter
        break;                                   % stopping criterion 
    end
 end
+
+% Estimating the Hessian of log(posterior) at MAP value 
+wMap = [w;1];
+X = ds(:,1:is); y = outp(wMap);
+Sn = inv(inv(So) + X'*diag(y.*(1-y))*X);
 
 
 end
