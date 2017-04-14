@@ -11,11 +11,11 @@ function [w, prior, lc] = irls(dataset, input_size, opt)
 % <============ HEADER =============>
 
 %% algo parameters
-max_iter = 5000;
-mini_batch_size = 40;
-eps = 1e-4;
+max_iter = 100;
+mini_batch_size = 724;
+eps = 1e-2;
 feature = 'linear';
-learning_rate = 0.002;
+learning_rate = 0.1;
 loss = 0;
 loss_array = zeros(max_iter,1);
 cor_hessian = 0.0001;
@@ -39,14 +39,14 @@ for iter=1:max_iter
         error('Unknwown feature')
    end
     
-   H = phi'*R*phi + cor_hessian*eye(input_size+1);  % hessian with correction for bad conditioning;
+   H = phi'*R*phi;  % hessian with correction for bad conditioning;
    g = phi'*(y-t);                                  % gradient
    switch (opt.name)
        case 'L1'
-           g = g + lambda*[sign(w(1:input_size));0];
+           g = g + lambda*sign(w);
        case 'L2'
-           H = H + lambda*[eye(size(H)-[1,1]),zeros(size(H,1)-1,1);zeros(1,size(H,2))];
-           g = g + lambda*([w(1:input_size);0]);
+           H = H + lambda*eye(size(H));
+           g = g + lambda*w;
    end
    d = linsolve(H,g);                               % Newton descent direction
    

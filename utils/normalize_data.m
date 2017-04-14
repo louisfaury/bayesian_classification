@@ -19,6 +19,10 @@ switch (name)
         input_size = 8;
         n_ds = table2array(ds(:,1:input_size+1));
         n_ds(:,1:input_size) = (n_ds(:,1:input_size)-mean(n_ds(:,1:input_size))) ./ sqrt(var(n_ds(:,1:input_size)));
+        n_ds(randperm(size(n_ds,1),400),:) = [];
+    case 'piddr'
+        input_size = 8;
+        n_ds = table2array(ds(:,1:input_size+1));
     otherwise
         error('Unknown dataset');
 end
