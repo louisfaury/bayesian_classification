@@ -8,10 +8,10 @@ function irls_cv(dataset, is, fold)
 % <============ HEADER =============>
 
 %% hyper-parameters 
-tt_ratio = 0.9;
-opt_names = {'unpenalized','L1','L2'};
-l1_penalties = [0.1, 2, 10];
-l2_penalties = [10, 100, 500];
+tt_ratio = 0.6;
+opt_names = {'unpenalized','L2'};
+l1_penalties = [0.1, 1, 5];
+l2_penalties = [0.1, 0.5, 2];
 n = 1+size(l1_penalties,2)+size(l2_penalties,2);
 f_measures = zeros(n+1,fold);
 roc_points = zeros(n+1,2);

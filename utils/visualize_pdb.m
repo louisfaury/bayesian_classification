@@ -26,11 +26,11 @@ proj_data = (data-mean(data))*proj_matrix';
 proj_w = proj_matrix*w(1:is);
 proj_S = proj_matrix*S(1:is,1:is)*proj_matrix';
 
-x1 = [-10:0.1:10];
-x2 = [-10:0.1:10];
+x1 = [min(proj_data(:,1))-1:0.1:max(proj_data(:,1))+1];
+x2 = [min(proj_data(:,2))-1:0.1:max(proj_data(:,2))+1];
 [X,Y] = meshgrid(x1,x2);
-for i=1:size(x1,2)
-    for j=1:size(x2,2)
+for i=1:size(x2,2)
+    for j=1:size(x1,2)
         Z(i,j) = pred_db_2d(X(i,j),Y(i,j),proj_w,proj_S);
     end
 end

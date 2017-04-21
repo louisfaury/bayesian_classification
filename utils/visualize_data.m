@@ -40,17 +40,17 @@ legend([m,b],'Positive','Negative');
 
 
 %% Hist plots 
-ixp = find(dataset(:,input_size+1));
-ixn = find(~dataset(:,input_size+1));
-figure('units','normalized','outerposition',[0 0 1 1]);
-subplot(3,3,1); histogram(dataset(ixp,1),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,1),'FaceColor','green'); title('Numbers of pregnancy'); legend('Positive','Negative');
-subplot(3,3,2); histogram(dataset(ixp,2),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,2),'FaceColor','green'); title('Plasma Glucose Concentration'); legend('Positive','Negative');
-subplot(3,3,3); histogram(dataset(ixp,3),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,3),'FaceColor','green'); title('Diastolic blood pressure'); legend('Positive','Negative');
-subplot(3,3,4); histogram(dataset(ixp,4),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,4),'FaceColor','green'); title('Triceps skin fold thickness'); legend('Positive','Negative');
-subplot(3,3,5); histogram(dataset(ixp,5),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,5),'FaceColor','green'); title('2-Hour serum insulin'); legend('Positive','Negative');
-subplot(3,3,6); histogram(dataset(ixp,6),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,6),'FaceColor','green'); title('Body mass index'); legend('Positive','Negative');
-subplot(3,3,7); histogram(dataset(ixp,7),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,7),'FaceColor','green'); title('iabetes pedigree function'); legend('Positive','Negative');
-subplot(3,3,8); histogram(dataset(ixp,8),11,'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,8),11,'FaceColor','green'); title('Age'); legend('Positive','Negative');
+ ixp = find(dataset(:,input_size+1));
+ ixn = find(~dataset(:,input_size+1));
+ figure('units','normalized','outerposition',[0 0 1 1]);
+ subplot(3,3,1); histogram(dataset(ixp,1),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,1),'FaceColor','green'); title('Numbers of pregnancy'); legend('Positive','Negative');
+ subplot(3,3,2); histogram(dataset(ixp,2),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,2),'FaceColor','green'); title('Plasma Glucose Concentration'); legend('Positive','Negative');
+ subplot(3,3,3); histogram(dataset(ixp,3),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,3),'FaceColor','green'); title('Diastolic blood pressure'); legend('Positive','Negative');
+ subplot(3,3,4); histogram(dataset(ixp,4),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,4),'FaceColor','green'); title('Triceps skin fold thickness'); legend('Positive','Negative');
+ subplot(3,3,5); histogram(dataset(ixp,5),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,5),'FaceColor','green'); title('2-Hour serum insulin'); legend('Positive','Negative');
+ subplot(3,3,6); histogram(dataset(ixp,6),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,6),'FaceColor','green'); title('Body mass index'); legend('Positive','Negative');
+ subplot(3,3,7); histogram(dataset(ixp,7),'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,7),'FaceColor','green'); title('iabetes pedigree function'); legend('Positive','Negative');
+ subplot(3,3,8); histogram(dataset(ixp,8),11,'FaceColor','red','FaceAlpha',0.8); hold on; histogram(dataset(ixn,8),11,'FaceColor','green'); title('Age'); legend('Positive','Negative');
 
 
 end

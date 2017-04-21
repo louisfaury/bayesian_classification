@@ -23,6 +23,15 @@ switch (name)
     case 'piddr'
         input_size = 8;
         n_ds = table2array(ds(:,1:input_size+1));
+    case 'synth'
+        input_size = 2;
+        n_ds = table2array(ds(:,1:input_size+1));
+    case 'park'
+        input_size = 22;
+        n_ds = table2array(ds(:,1:input_size+1));
+        n_ds(:,1:input_size) = (n_ds(:,1:input_size)-mean(n_ds(:,1:input_size))) ./ sqrt(var(n_ds(:,1:input_size)));
+        
+        
     otherwise
         error('Unknown dataset');
 end

@@ -10,7 +10,9 @@ addpath(genpath('utils'));
 
 %% load dataset 
 %dataset_name = 'bcw';
-dataset_name = 'piddr';
+%dataset_name = 'piddr';
+%dataset_name = 'synth';
+dataset_name = 'park';
 ds = readtable(strcat(dataset_name,'.csv'));
 [ds, is] = normalize_data(dataset_name,ds);
 
@@ -23,9 +25,9 @@ ds = readtable(strcat(dataset_name,'.csv'));
 % IRLS solution vizualisation 
 % ---------------------------
 % opt_up = struct('name','unpenalized','hp',[]);     % unpenalized IRLS
-% opt_L1 = struct('name','L1','hp',2);               % LASSO penalization
-% opt_L2 = struct('name','L2','hp',100);              % RIDGE penalization
-% opt = opt_L1;
+% opt_L1 = struct('name','L1','hp',10);               % LASSO penalization
+% opt_L2 = struct('name','L2','hp',10);              % RIDGE penalization
+% opt = opt_up;
 % [w, prior, lc] = irls(ds, is, opt); 
 % visualize_solution(w(1:is), ds, is, lc, opt);
 % ---------------------------

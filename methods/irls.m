@@ -11,14 +11,13 @@ function [w, prior, lc] = irls(dataset, input_size, opt)
 % <============ HEADER =============>
 
 %% algo parameters
-max_iter = 100;
-mini_batch_size = 724;
+max_iter = 50;
+mini_batch_size = size(dataset,1);
 eps = 1e-2;
 feature = 'linear';
-learning_rate = 0.1;
+learning_rate = 0.2;
 loss = 0;
 loss_array = zeros(max_iter,1);
-cor_hessian = 0.0001;
 lambda = opt.hp;
 
 %% init
@@ -27,7 +26,7 @@ w = zeros(input_size+1,1);
 %% run
 for iter=1:max_iter
     % minibatch sample and output computation
-   [mb, t] = sample_mini_batch(mini_batch_size, dataset, input_size);
+   [mb, t] = sample_mini_batch(mini_batch_size, dataset, input_size,false);
    y = compute_output('logistic_sigmoid', w(1:input_size), w(input_size+1), mb, feature);
    
    % update
@@ -75,7 +74,7 @@ end
 if (nargin>2)
    if (strcmp(opt.name,'L1'))
       % sparse formulation 
-      w = w.*double(w>0.001);
+      w = w.*double(abs(w)>0.001);
    end
 end
 lc = loss_array(1:iter-1);

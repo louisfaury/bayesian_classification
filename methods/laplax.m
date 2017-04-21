@@ -9,7 +9,7 @@ function [wMap,Sn] = laplax(ds, is)
 % <============ HEADER =============>
 
 mo = zeros(is+1,1);
-So = 0.01*eye(is+1);
+So = 10*eye(is+1);
 prior = gaussianDb(is,mo,So); % start with centered Gaussian prior 
 outp  = @(w) compute_output('logistic_sigmoid',w(1:is),w(is+1),ds(:,1:is),'linear');
 

@@ -27,8 +27,8 @@ proj_data = (data-mean(data))*proj_matrix';
 proj_w = proj_matrix*w;
 
 
-x1 = [-6:0.01:6];
-x2 = [-6:0.01:6];
+x1 = [min(proj_data(:,1))-1:0.01:max(proj_data(:,1))+1];
+x2 = [min(proj_data(:,2))-1:0.01:max(proj_data(:,2))+1];
 [X,Y] = meshgrid(x1,x2);
 sig = @(x,y) 1./(1+exp(-(proj_w(1).*x + proj_w(2).*y)));
 Z = sig(X,Y);
@@ -56,7 +56,7 @@ end
 title('Class probability (projected) with Laplace Approximation');
 xlabel('$e_1$','Interpreter','latex');
 ylabel('$e_2$','Interpreter','latex');
-legend([m,b,c],'Malign','Benign',strcat('Decision boundary : Laplace Approximation'));
+legend([m,b],'1','0');
 
 
 
