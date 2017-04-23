@@ -1,1295 +1,202 @@
- • Implementation of basic bayesian (and GML to be compared with) methods for binary classification on the *Breast Cancer (Diagnostic) Wiscounsin* dataset.  
- • The full dataset is composed of 699 points laying in a 10-dimensional space. It is detailed below : 
+ • Implementation of basic bayesian (and GML to be compared with) methods for binary classification on the *Oxford Parkinson* dataset.  
+ • The full dataset is composed of 195 points with 22 covariates. It is detailed below : 
 
 
-    Radius    Texture    Perimeter    Area    Smoothness    Compactness    Concacity    Concavity    Symetry    Diagnostic
-    ______    _______    _________    ____    __________    ___________    _________    _________    _______    __________
+ MDVP_Fo_Hz_    MDVP_Fhi_Hz_    MDVP_Flo_Hz_    MDVP_Jitter___    MDVP_Jitter_Abs_    MDVP_RAP    MDVP_PPQ    Jitter_DDP    MDVP_Shimmer    MDVP_Shimmer_dB_    Shimmer_APQ3    Shimmer_APQ5    MDVP_APQ    Shimmer_DDA      NHR       HNR       RPDE        DFA      spread1    spread2       D2        PPE       status
+    ___________    ____________    ____________    ______________    ________________    ________    ________    __________    ____________    ________________    ____________    ____________    ________    ___________    _______    ______    _______    _______    _______    ________    ______    ________    ______
 
-     5         1          1            1       2             1              3            1            1         'benign'  
-     5         4          4            5       7            10              3            2            1         'benign'  
-     3         1          1            1       2             2              3            1            1         'benign'  
-     6         8          8            1       3             4              3            7            1         'benign'  
-     4         1          1            3       2             1              3            1            1         'benign'  
-     8        10         10            8       7            10              9            7            1         'malign'  
-     1         1          1            1       2            10              3            1            1         'benign'  
-     2         1          2            1       2             1              3            1            1         'benign'  
-     2         1          1            1       2             1              1            1            5         'benign'  
-     4         2          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       1             1              3            1            1         'benign'  
-     2         1          1            1       2             1              2            1            1         'benign'  
-     5         3          3            3       2             3              4            4            1         'malign'  
-     1         1          1            1       2             3              3            1            1         'benign'  
-     8         7          5           10       7             9              5            5            4         'malign'  
-     7         4          6            4       6             1              4            3            1         'malign'  
-     4         1          1            1       2             1              2            1            1         'benign'  
-     4         1          1            1       2             1              3            1            1         'benign'  
-    10         7          7            6       4            10              4            1            2         'malign'  
-     6         1          1            1       2             1              3            1            1         'benign'  
-     7         3          2           10       5            10              5            4            4         'malign'  
-    10         5          5            3       6             7              7           10            1         'malign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     8         4          5            1       2             0              7            3            1         'malign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     5         2          3            4       2             7              3            6            1         'malign'  
-     3         2          1            1       1             1              2            1            1         'benign'  
-     5         1          1            1       2             1              2            1            1         'benign'  
-     2         1          1            1       2             1              2            1            1         'benign'  
-     1         1          3            1       2             1              1            1            1         'benign'  
-     3         1          1            1       1             1              2            1            1         'benign'  
-     2         1          1            1       2             1              3            1            1         'benign'  
-    10         7          7            3       8             5              7            4            3         'malign'  
-     2         1          1            2       2             1              3            1            1         'benign'  
-     3         1          2            1       2             1              2            1            1         'benign'  
-     2         1          1            1       2             1              2            1            1         'benign'  
-    10        10         10            8       6             1              8            9            1         'malign'  
-     6         2          1            1       1             1              7            1            1         'benign'  
-     5         4          4            9       2            10              5            6            1         'malign'  
-     2         5          3            3       6             7              7            5            1         'malign'  
-     6         6          6            9       6             0              7            8            1         'benign'  
-    10         4          3            1       3             3              6            5            2         'malign'  
-     6        10         10            2       8            10              7            3            3         'malign'  
-     5         6          5            6      10             1              3            1            1         'malign'  
-    10        10         10            4       8             1              8           10            1         'malign'  
-     1         1          1            1       2             1              2            1            2         'benign'  
-     3         7          7            4       4             9              4            8            1         'malign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     4         1          1            3       2             1              3            1            1         'benign'  
-     7         8          7            2       4             8              3            8            2         'malign'  
-     9         5          8            1       2             3              2            1            5         'malign'  
-     5         3          3            4       2             4              3            4            1         'malign'  
-    10         3          6            2       3             5              4           10            2         'malign'  
-     5         5          5            8      10             8              7            3            7         'malign'  
-    10         5          5            6       8             8              7            1            1         'malign'  
-    10         6          6            3       4             5              3            6            1         'malign'  
-     8        10         10            1       3             6              3            9            1         'malign'  
-     8         2          4            1       5             1              5            4            4         'malign'  
-     5         2          3            1       6            10              5            1            1         'malign'  
-     9         5          5            2       2             2              5            1            1         'malign'  
-     5         3          5            5       3             3              4           10            1         'malign'  
-     1         1          1            1       2             2              2            1            1         'benign'  
-     9        10         10            1      10             8              3            3            1         'malign'  
-     6         3          4            1       5             2              3            9            1         'malign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-    10         4          2            1       3             2              4            3           10         'malign'  
-     4         1          1            1       2             1              3            1            1         'benign'  
-     5         3          4            1       8            10              4            9            1         'malign'  
-     8         3          8            3       4             9              8            9            8         'malign'  
-     1         1          1            1       2             1              3            2            1         'benign'  
-     5         1          3            1       2             1              2            1            1         'benign'  
-     6        10          2            8      10             2              7            8           10         'malign'  
-     1         3          3            2       2             1              7            2            1         'benign'  
-     9         4          5           10       6            10              4            8            1         'malign'  
-    10         6          4            1       3             4              3            2            3         'malign'  
-     1         1          2            1       2             2              4            2            1         'benign'  
-     1         1          4            1       2             1              2            1            1         'benign'  
-     5         3          1            2       2             1              2            1            1         'benign'  
-     3         1          1            1       2             3              3            1            1         'benign'  
-     2         1          1            1       3             1              2            1            1         'benign'  
-     2         2          2            1       1             1              7            1            1         'benign'  
-     4         1          1            2       2             1              2            1            1         'benign'  
-     5         2          1            1       2             1              3            1            1         'benign'  
-     3         1          1            1       2             2              7            1            1         'benign'  
-     3         5          7            8       8             9              7           10            7         'malign'  
-     5        10          6            1      10             4              4           10           10         'malign'  
-     3         3          6            4       5             8              4            4            1         'malign'  
-     3         6          6            6       5            10              6            8            3         'malign'  
-     4         1          1            1       2             1              3            1            1         'benign'  
-     2         1          1            2       3             1              2            1            1         'benign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     3         1          1            2       2             1              1            1            1         'benign'  
-     4         1          1            1       2             1              3            1            1         'benign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     2         1          1            1       2             1              3            1            1         'benign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     2         1          1            2       2             1              1            1            1         'benign'  
-     5         1          1            1       2             1              3            1            1         'benign'  
-     9         6          9            2      10             6              2            9           10         'malign'  
-     7         5          6           10       5            10              7            9            4         'malign'  
-    10         3          5            1      10             5              3           10            2         'malign'  
-     2         3          4            4       2             5              2            5            1         'malign'  
-     4         1          2            1       2             1              3            1            1         'benign'  
-     8         2          3            1       6             3              7            1            1         'malign'  
-    10        10         10           10      10             1              8            8            8         'malign'  
-     7         3          4            4       3             3              3            2            7         'malign'  
-    10        10         10            8       2            10              4            1            1         'malign'  
-     1         6          8           10       8            10              5            7            1         'malign'  
-     1         1          1            1       2             1              2            3            1         'benign'  
-     6         5          4            4       3             9              7            8            3         'malign'  
-     1         3          1            2       2             2              5            3            2         'benign'  
-     8         6          4            3       5             9              3            1            1         'malign'  
-    10         3          3           10       2            10              7            3            3         'malign'  
-    10        10         10            3      10             8              8            1            1         'malign'  
-     3         3          2            1       2             3              3            1            1         'benign'  
-     1         1          1            1       2             5              1            1            1         'benign'  
-     8         3          3            1       2             2              3            2            1         'benign'  
-     4         5          5           10       4            10              7            5            8         'malign'  
-     1         1          1            1       4             3              1            1            1         'benign'  
-     3         2          1            1       2             2              3            1            1         'benign'  
-     1         1          2            2       2             1              3            1            1         'benign'  
-     4         2          1            1       2             2              3            1            1         'benign'  
-    10        10         10            2      10            10              5            3            3         'malign'  
-     5         3          5            1       8            10              5            3            1         'malign'  
-     5         4          6            7       9             7              8           10            1         'malign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     7         5          3            7       4            10              7            5            5         'malign'  
-     3         1          1            1       2             1              3            1            1         'benign'  
-     8         3          5            4       5            10              1            6            2         'malign'  
-     1         1          1            1      10             1              1            1            1         'benign'  
-     5         1          3            1       2             1              2            1            1         'benign'  
-     2         1          1            1       2             1              3            1            1         'benign'  
-     5        10          8           10       8            10              3            6            3         'malign'  
-     3         1          1            1       2             1              2            2            1         'benign'  
-     3         1          1            1       3             1              2            1            1         'benign'  
-     5         1          1            1       2             2              3            3            1         'benign'  
-     4         1          1            1       2             1              2            1            1         'benign'  
-     3         1          1            1       2             1              1            1            1         'benign'  
-     4         1          2            1       2             1              2            1            1         'benign'  
-     1         1          1            1       1             0              2            1            1         'benign'  
-     3         1          1            1       2             1              1            1            1         'benign'  
-     2         1          1            1       2             1              1            1            1         'benign'  
-     9         5          5            4       4             5              4            3            3         'malign'  
-     1         1          1            1       2             5              1            1            1         'benign'  
-     2         1          1            1       2             1              2            1            1         'benign'  
-     1         1          3            1       2             0              2            1            1         'benign'  
-     3         4          5            2       6             8              4            1            1         'malign'  
-     1         1          1            1       3             2              2            1            1         'benign'  
-     3         1          1            3       8             1              5            8            1         'benign'  
-     8         8          7            4      10            10              7            8            7         'malign'  
-     1         1          1            1       1             1              3            1            1         'benign'  
-     7         2          4            1       6            10              5            4            3         'malign'  
-    10        10          8            6       4             5              8           10            1         'malign'  
-     4         1          1            1       2             3              1            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     5         5          5            6       3            10              3            1            1         'malign'  
-     1         2          2            1       2             1              2            1            1         'benign'  
-     2         1          1            1       2             1              3            1            1         'benign'  
-     1         1          2            1       3             0              1            1            1         'benign'  
-     9         9         10            3       6            10              7           10            6         'malign'  
-    10         7          7            4       5            10              5            7            2         'malign'  
-     4         1          1            1       2             1              3            2            1         'benign'  
-     3         1          1            1       2             1              3            1            1         'benign'  
-     1         1          1            2       1             3              1            1            7         'benign'  
-     5         1          1            1       2             0              3            1            1         'benign'  
-     4         1          1            1       2             2              3            2            1         'benign'  
-     5         6          7            8       8            10              3           10            3         'malign'  
-    10         8         10           10       6             1              3            1           10         'malign'  
-     3         1          1            1       2             1              3            1            1         'benign'  
-     1         1          1            2       1             1              1            1            1         'benign'  
-     3         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     6        10         10           10       8            10             10           10            7         'malign'  
-     8         6          5            4       3            10              6            1            1         'malign'  
-     5         8          7            7      10            10              5            7            1         'malign'  
-     2         1          1            1       2             1              3            1            1         'benign'  
-     5        10         10            3       8             1              5           10            3         'malign'  
-     4         1          1            1       2             1              3            1            1         'benign'  
-     5         3          3            3       6            10              3            1            1         'malign'  
-     1         1          1            1       1             1              3            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     6         1          1            1       2             1              3            1            1         'benign'  
-     5         8          8            8       5            10              7            8            1         'malign'  
-     8         7          6            4       4            10              5            1            1         'malign'  
-     2         1          1            1       1             1              3            1            1         'benign'  
-     1         5          8            6       5             8              7           10            1         'malign'  
-    10         5          6           10       6            10              7            7           10         'malign'  
-     5         8          4           10       5             8              9           10            1         'malign'  
-     1         2          3            1       2             1              3            1            1         'benign'  
-    10        10         10            8       6             8              7           10            1         'malign'  
-     7         5         10           10      10            10              4           10            3         'malign'  
-     5         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     3         1          1            1       2             1              3            1            1         'benign'  
-     4         1          1            1       2             1              3            1            1         'benign'  
-     8         4          4            5       4             7              7            8            2         'benign'  
-     5         1          1            4       2             1              3            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     9         7          7            5       5            10              7            8            3         'malign'  
-    10         8          8            4      10            10              8            1            1         'malign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     5         1          1            1       2             1              3            1            1         'benign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     5        10         10            9       6            10              7           10            5         'malign'  
-    10        10          9            3       7             5              3            5            1         'malign'  
-     1         1          1            1       1             1              3            1            1         'benign'  
-     1         1          1            1       1             1              3            1            1         'benign'  
-     5         1          1            1       1             1              3            1            1         'benign'  
-     8        10         10           10       5            10              8           10            6         'malign'  
-     8        10          8            8       4             8              7            7            1         'malign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-    10        10         10           10       7            10              7           10            4         'malign'  
-    10        10         10           10       3            10             10            6            1         'malign'  
-     8         7          8            7       5             5              5           10            2         'malign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     6        10          7            7       6             4              8           10            2         'malign'  
-     6         1          3            1       2             1              3            1            1         'benign'  
-     1         1          1            2       2             1              3            1            1         'benign'  
-    10         6          4            3      10            10              9           10            1         'malign'  
-     4         1          1            3       1             5              2            1            1         'malign'  
-     7         5          6            3       3             8              7            4            1         'malign'  
-    10         5          5            6       3            10              7            9            2         'malign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-    10         5          7            4       4            10              8            9            1         'malign'  
-     8         9          9            5       3             5              7            7            1         'malign'  
-     1         1          1            1       1             1              3            1            1         'benign'  
-    10        10         10            3      10            10              9           10            1         'malign'  
-     7         4          7            4       3             7              7            6            1         'malign'  
-     6         8          7            5       6             8              8            9            2         'malign'  
-     8         4          6            3       3             1              4            3            1         'benign'  
-    10         4          5            5       5            10              4            1            1         'malign'  
-     3         3          2            1       3             1              3            6            1         'benign'  
-     3         1          4            1       2             0              3            1            1         'benign'  
-    10         8          8            2       8            10              4            8           10         'malign'  
-     9         8          8            5       6             2              4           10            4         'malign'  
-     8        10         10            8       6             9              3           10           10         'malign'  
-    10         4          3            2       3            10              5            3            2         'malign'  
-     5         1          3            3       2             2              2            3            1         'benign'  
-     3         1          1            3       1             1              3            1            1         'benign'  
-     2         1          1            1       2             1              3            1            1         'benign'  
-     1         1          1            1       2             5              5            1            1         'benign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     5         1          1            2       2             2              3            1            1         'benign'  
-     8        10         10            8       5            10              7            8            1         'malign'  
-     8         4          4            1       2             9              3            3            1         'malign'  
-     4         1          1            1       2             1              3            6            1         'benign'  
-     3         1          1            1       2             0              3            1            1         'benign'  
-     1         2          2            1       2             1              1            1            1         'benign'  
-    10         4          4           10       2            10              5            3            3         'malign'  
-     6         3          3            5       3            10              3            5            3         'benign'  
-     6        10         10            2       8            10              7            3            3         'malign'  
-     9        10         10            1      10             8              3            3            1         'malign'  
-     5         6          6            2       4            10              3            6            1         'malign'  
-     3         1          1            1       2             1              1            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     3         1          1            1       2             1              3            1            1         'benign'  
-     5         7          7            1       5             8              3            4            1         'benign'  
-    10         5          8           10       3            10              5            1            3         'malign'  
-     5        10         10            6      10            10             10            6            5         'malign'  
-     8         8          9            4       5            10              7            8            1         'malign'  
-    10         4          4           10       6            10              5            5            1         'malign'  
-     7         9          4           10      10             3              5            3            3         'malign'  
-     5         1          4            1       2             1              3            2            1         'benign'  
-    10        10          6            3       3            10              4            3            2         'malign'  
-     3         3          5            2       3            10              7            1            1         'malign'  
-    10         8          8            2       3             4              8            7            8         'malign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     8         4          7            1       3            10              3            9            2         'malign'  
-     5         1          1            1       2             1              3            1            1         'benign'  
-     3         3          5            2       3            10              7            1            1         'malign'  
-     7         2          4            1       3             4              3            3            1         'malign'  
-     3         1          1            1       2             1              3            2            1         'benign'  
-     3         1          3            1       2             0              2            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-    10         5          7            3       3             7              3            3            8         'malign'  
-     3         1          1            1       2             1              3            1            1         'benign'  
-     2         1          1            2       2             1              3            1            1         'benign'  
-     1         4          3           10       4            10              5            6            1         'malign'  
-    10         4          6            1       2            10              5            3            1         'malign'  
-     7         4          5           10       2            10              3            8            2         'malign'  
-     8        10         10           10       8            10             10            7            3         'malign'  
-    10        10         10           10      10            10              4           10           10         'malign'  
-     3         1          1            1       3             1              2            1            1         'benign'  
-     6         1          3            1       4             5              5           10            1         'malign'  
-     5         6          6            8       6            10              4           10            4         'malign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     8         8          8            1       2             0              6           10            1         'malign'  
-    10         4          4            6       2            10              2            3            1         'malign'  
-     1         1          1            1       2             0              2            1            1         'benign'  
-     5         5          7            8       6            10              7            4            1         'malign'  
-     5         3          4            3       4             5              4            7            1         'benign'  
-     5         4          3            1       2             0              2            3            1         'benign'  
-     8         2          1            1       5             1              1            1            1         'benign'  
-     9         1          2            6       4            10              7            7            2         'malign'  
-     8         4         10            5       4             4              7           10            1         'malign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-    10        10         10            7       9            10              7           10           10         'malign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     8         3          4            9       3            10              3            3            1         'malign'  
-    10         8          4            4       4            10              3           10            4         'malign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     7         8          7            6       4             3              8            8            4         'malign'  
-     3         1          1            1       2             5              5            1            1         'benign'  
-     2         1          1            1       3             1              2            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     8         6          4           10      10             1              3            5            1         'malign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       1             1              2            1            1         'benign'  
-     4         6          5            6       7             0              4            9            1         'benign'  
-     5         5          5            2       5            10              4            3            1         'malign'  
-     6         8          7            8       6             8              8            9            1         'malign'  
-     1         1          1            1       5             1              3            1            1         'benign'  
-     4         4          4            4       6             5              7            3            1         'benign'  
-     7         6          3            2       5            10              7            4            6         'malign'  
-     3         1          1            1       2             0              3            1            1         'benign'  
-     3         1          1            1       2             1              3            1            1         'benign'  
-     5         4          6           10       2            10              4            1            1         'malign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     3         2          2            1       2             1              2            3            1         'benign'  
-    10         1          1            1       2            10              5            4            1         'malign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     8        10          3            2       6             4              3           10            1         'malign'  
-    10         4          6            4       5            10              7            1            1         'malign'  
-    10         4          7            2       2             8              6            1            1         'malign'  
-     5         1          1            1       2             1              3            1            2         'benign'  
-     5         2          2            2       2             1              2            2            1         'benign'  
-     5         4          6            6       4            10              4            3            1         'malign'  
-     8         6          7            3       3            10              3            4            2         'malign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     6         5          5            8       4            10              3            4            1         'malign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     1         1          1            1       1             1              2            1            1         'benign'  
-     8         5          5            5       2            10              4            3            1         'malign'  
-    10         3          3            1       2            10              7            6            1         'malign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     2         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     7         6          4            8      10            10              9            5            3         'malign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     5         2          2            2       3             1              1            3            1         'benign'  
-     1         1          1            1       1             1              1            3            1         'benign'  
-     3         4          4           10       5             1              3            3            1         'malign'  
-     4         2          3            5       3             8              7            6            1         'malign'  
-     5         1          1            3       2             1              1            1            1         'benign'  
-     2         1          1            1       2             1              3            1            1         'benign'  
-     3         4          5            3       7             3              4            6            1         'benign'  
-     2         7         10           10       7            10              4            9            4         'malign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     4         1          1            1       3             1              2            2            1         'benign'  
-     5         3          3            1       3             3              3            3            3         'malign'  
-     8        10         10            7      10            10              7            3            8         'malign'  
-     8        10          5            3       8             4              4           10            3         'malign'  
-    10         3          5            4       3             7              3            5            3         'malign'  
-     6        10         10           10      10            10              8           10           10         'malign'  
-     3        10          3           10       6            10              5            1            4         'malign'  
-     3         2          2            1       4             3              2            1            1         'benign'  
-     4         4          4            2       2             3              2            1            1         'benign'  
-     2         1          1            1       2             1              3            1            1         'benign'  
-     2         1          1            1       2             1              2            1            1         'benign'  
-     6        10         10           10       8            10              7           10            7         'malign'  
-     5         8          8           10       5            10              8           10            3         'malign'  
-     1         1          3            1       2             1              1            1            1         'benign'  
-     1         1          3            1       1             1              2            1            1         'benign'  
-     4         3          2            1       3             1              2            1            1         'benign'  
-     1         1          3            1       2             1              1            1            1         'benign'  
-     4         1          2            1       2             1              2            1            1         'benign'  
-     5         1          1            2       2             1              2            1            1         'benign'  
-     3         1          2            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       1             1              2            1            1         'benign'  
-     3         1          1            4       3             1              2            2            1         'benign'  
-     5         3          4            1       4             1              3            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-    10         6          3            6       4            10              7            8            4         'malign'  
-     3         2          2            2       2             1              3            2            1         'benign'  
-     2         1          1            1       2             1              1            1            1         'benign'  
-     2         1          1            1       2             1              1            1            1         'benign'  
-     3         3          2            2       3             1              1            2            3         'benign'  
-     7         6          6            3       2            10              7            1            1         'malign'  
-     5         3          3            2       3             1              3            1            1         'benign'  
-     2         1          1            1       2             1              2            2            1         'benign'  
-     5         1          1            1       3             2              2            2            1         'benign'  
-     1         1          1            2       2             1              2            1            1         'benign'  
-    10         8          7            4       3            10              7            9            1         'malign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       1             1              1            1            1         'benign'  
-     1         2          3            1       2             1              2            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     3         1          1            1       2             1              3            1            1         'benign'  
-     4         1          1            1       2             1              1            1            1         'benign'  
-     3         2          1            1       2             1              2            2            1         'benign'  
-     1         2          3            1       2             1              1            1            1         'benign'  
-     3        10          8            7       6             9              9            3            8         'malign'  
-     3         1          1            1       2             1              1            1            1         'benign'  
-     5         3          3            1       2             1              2            1            1         'benign'  
-     3         1          1            1       2             4              1            1            1         'benign'  
-     1         2          1            3       2             1              1            2            1         'benign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     4         2          2            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     2         3          2            2       2             2              3            1            1         'benign'  
-     3         1          2            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       1             0              2            1            1         'benign'  
-    10        10         10            6       8             4              8            5            1         'malign'  
-     5         1          2            1       2             1              3            1            1         'benign'  
-     8         5          6            2       3            10              6            6            1         'malign'  
-     3         3          2            6       3             3              3            5            1         'benign'  
-     8         7          8            5      10            10              7            2            1         'malign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     5         2          2            2       2             2              3            2            2         'benign'  
-     2         3          1            1       5             1              1            1            1         'benign'  
-     3         2          2            3       2             3              3            1            1         'benign'  
-    10        10         10            7      10            10              8            2            1         'malign'  
-     4         3          3            1       2             1              3            3            1         'benign'  
-     5         1          3            1       2             1              2            1            1         'benign'  
-     3         1          1            1       2             1              1            1            1         'benign'  
-     9        10         10           10      10            10             10           10            1         'malign'  
-     5         3          6            1       2             1              1            1            1         'benign'  
-     8         7          8            2       4             2              5           10            1         'malign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     2         1          1            1       2             1              2            1            1         'benign'  
-     1         3          1            1       2             1              2            2            1         'benign'  
-     5         1          1            3       4             1              3            2            1         'benign'  
-     5         1          1            1       2             1              2            2            1         'benign'  
-     3         2          2            3       2             1              1            1            1         'benign'  
-     6         9          7            5       5             8              4            2            1         'benign'  
-    10         8         10            1       3            10              5            1            1         'malign'  
-    10        10         10            1       6             1              2            8            1         'malign'  
-     4         1          1            1       2             1              1            1            1         'benign'  
-     4         1          3            3       2             1              1            1            1         'benign'  
-     5         1          1            1       2             1              1            1            1         'benign'  
-    10         4          3           10       4            10             10            1            1         'malign'  
-     5         2          2            4       2             4              1            1            1         'benign'  
-     1         1          1            3       2             3              1            1            1         'benign'  
-     1         1          1            1       2             2              1            1            1         'benign'  
-     5         1          1            6       3             1              2            1            1         'benign'  
-     2         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     5         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       1             1              1            1            1         'benign'  
-     5         7          9            8       6            10              8           10            1         'malign'  
-     4         1          1            3       1             1              2            1            1         'benign'  
-     5         1          1            1       2             1              1            1            1         'benign'  
-     3         1          1            3       2             1              1            1            1         'benign'  
-     4         5          5            8       6            10             10            7            1         'malign'  
-     2         3          1            1       3             1              1            1            1         'benign'  
-    10         2          2            1       2             6              1            1            2         'malign'  
-    10         6          5            8       5            10              8            6            1         'malign'  
-     8         8          9            6       6             3             10           10            1         'malign'  
-     5         1          2            1       2             1              1            1            1         'benign'  
-     5         1          3            1       2             1              1            1            1         'benign'  
-     5         1          1            3       2             1              1            1            1         'benign'  
-     3         1          1            1       2             5              1            1            1         'benign'  
-     6         1          1            3       2             1              1            1            1         'benign'  
-     4         1          1            1       2             1              1            2            1         'benign'  
-     4         1          1            1       2             1              1            1            1         'benign'  
-    10         9          8            7       6             4              7           10            3         'malign'  
-    10         6          6            2       4            10              9            7            1         'malign'  
-     6         6          6            5       4            10              7            6            2         'malign'  
-     4         1          1            1       2             1              1            1            1         'benign'  
-     1         1          2            1       2             1              2            1            1         'benign'  
-     3         1          1            1       1             1              2            1            1         'benign'  
-     6         1          1            3       2             1              1            1            1         'benign'  
-     6         1          1            1       1             1              1            1            1         'benign'  
-     4         1          1            1       2             1              1            1            1         'benign'  
-     5         1          1            1       2             1              1            1            1         'benign'  
-     3         1          1            1       2             1              1            1            1         'benign'  
-     4         1          2            1       2             1              1            1            1         'benign'  
-     4         1          1            1       2             1              1            1            1         'benign'  
-     5         2          1            1       2             1              1            1            1         'benign'  
-     4         8          7           10       4            10              7            5            1         'malign'  
-     5         1          1            1       1             1              1            1            1         'benign'  
-     5         3          2            4       2             1              1            1            1         'benign'  
-     9        10         10           10      10             5             10           10           10         'malign'  
-     8         7          8            5       5            10              9           10            1         'malign'  
-     5         1          2            1       2             1              1            1            1         'benign'  
-     1         1          1            3       1             3              1            1            1         'benign'  
-     3         1          1            1       1             1              2            1            1         'benign'  
-    10        10         10           10       6            10              8            1            5         'malign'  
-     3         6          4           10       3             3              3            4            1         'malign'  
-     6         3          2            1       3             4              4            1            1         'malign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     5         8          9            4       3            10              7            1            1         'malign'  
-     4         1          1            1       1             1              2            1            1         'benign'  
-     5        10         10           10       6            10              6            5            2         'malign'  
-     5         1          2           10       4             5              2            1            1         'benign'  
-     3         1          1            1       1             1              2            1            1         'benign'  
-     1         1          1            1       1             1              1            1            1         'benign'  
-     4         2          1            1       2             1              1            1            1         'benign'  
-     4         1          1            1       2             1              2            1            1         'benign'  
-     4         1          1            1       2             1              2            1            1         'benign'  
-     6         1          1            1       2             1              3            1            1         'benign'  
-     4         1          1            1       2             1              2            1            1         'benign'  
-     4         1          1            2       2             1              2            1            1         'benign'  
-     4         1          1            1       2             1              3            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     3         3          1            1       2             1              1            1            1         'benign'  
-     8        10         10           10       7             5              4            8            7         'malign'  
-     1         1          1            1       2             4              1            1            1         'benign'  
-     5         1          1            1       2             1              1            1            1         'benign'  
-     2         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     5         1          1            1       2             1              2            1            1         'benign'  
-     5         1          1            1       2             1              1            1            1         'benign'  
-     3         1          1            1       1             1              2            1            1         'benign'  
-     6         6          7           10       3            10              8           10            2         'malign'  
-     4        10          4            7       3            10              9           10            1         'malign'  
-     1         1          1            1       1             1              1            1            1         'benign'  
-     1         1          1            1       1             1              2            1            1         'benign'  
-     3         1          2            2       2             1              1            1            1         'benign'  
-     4         7          8            3       4            10              9            1            1         'malign'  
-     1         1          1            1       3             1              1            1            1         'benign'  
-     4         1          1            1       3             1              1            1            1         'benign'  
-    10         4          5            4       3             5              7            3            1         'malign'  
-     7         5          6           10       4            10              5            3            1         'malign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     3         1          1            2       2             1              1            1            1         'benign'  
-     4         1          1            1       2             1              1            1            1         'benign'  
-     4         1          1            1       2             1              3            1            1         'benign'  
-     6         1          3            2       2             1              1            1            1         'benign'  
-     4         1          1            1       1             1              2            1            1         'benign'  
-     7         4          4            3       4            10              6            9            1         'malign'  
-     4         2          2            1       2             1              2            1            1         'benign'  
-     1         1          1            1       1             1              3            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     2         1          1            1       2             1              2            1            1         'benign'  
-     1         1          3            2       2             1              3            1            1         'benign'  
-     5         1          1            1       2             1              3            1            1         'benign'  
-     5         1          2            1       2             1              3            1            1         'benign'  
-     4         1          1            1       2             1              2            1            1         'benign'  
-     6         1          1            1       2             1              2            1            1         'benign'  
-     5         1          1            1       2             2              2            1            1         'benign'  
-     3         1          1            1       2             1              1            1            1         'benign'  
-     5         3          1            1       2             1              1            1            1         'benign'  
-     4         1          1            1       2             1              2            1            1         'benign'  
-     2         1          3            2       2             1              2            1            1         'benign'  
-     5         1          1            1       2             1              2            1            1         'benign'  
-     6        10         10           10       4            10              7           10            1         'malign'  
-     2         1          1            1       1             1              1            1            1         'benign'  
-     3         1          1            1       1             1              1            1            1         'benign'  
-     7         8          3            7       4             5              7            8            2         'malign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     3         2          2            2       2             1              4            2            1         'benign'  
-     4         4          2            1       2             5              2            1            2         'benign'  
-     3         1          1            1       2             1              1            1            1         'benign'  
-     4         3          1            1       2             1              4            8            1         'benign'  
-     5         2          2            2       1             1              2            1            1         'benign'  
-     5         1          1            3       2             1              1            1            1         'benign'  
-     2         1          1            1       2             1              2            1            1         'benign'  
-     5         1          1            1       2             1              2            1            1         'benign'  
-     5         1          1            1       2             1              3            1            1         'benign'  
-     5         1          1            1       2             1              3            1            1         'benign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     4         1          1            1       2             1              3            2            1         'benign'  
-     5         7         10           10       5            10             10           10            1         'malign'  
-     3         1          2            1       2             1              3            1            1         'benign'  
-     4         1          1            1       2             3              2            1            1         'benign'  
-     8         4          4            1       6            10              2            5            2         'malign'  
-    10        10          8           10       6             5             10            3            1         'malign'  
-     8        10          4            4       8            10              8            2            1         'malign'  
-     7         6         10            5       3            10              9           10            2         'malign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-    10         9          7            3       4             2              7            7            1         'malign'  
-     5         1          2            1       2             1              3            1            1         'benign'  
-     5         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              3            1            1         'benign'  
-     5         1          2            1       2             1              2            1            1         'benign'  
-     5         7         10            6       5            10              7            5            1         'malign'  
-     6        10          5            5       4            10              6           10            1         'malign'  
-     3         1          1            1       2             1              1            1            1         'benign'  
-     5         1          1            6       3             1              1            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     8        10         10           10       6            10             10           10            1         'malign'  
-     5         1          1            1       2             1              2            2            1         'benign'  
-     9         8          8            9       6             3              4            1            1         'malign'  
-     5         1          1            1       2             1              1            1            1         'benign'  
-     4        10          8            5       4             1             10            1            1         'malign'  
-     2         5          7            6       4            10              7            6            1         'malign'  
-    10         3          4            5       3            10              4            1            1         'malign'  
-     5         1          2            1       2             1              1            1            1         'benign'  
-     4         8          6            3       4            10              7            1            1         'malign'  
-     5         1          1            1       2             1              2            1            1         'benign'  
-     4         1          2            1       2             1              2            1            1         'benign'  
-     5         1          3            1       2             1              3            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     5         2          4            1       1             1              1            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       1             1              2            1            1         'benign'  
-     4         1          1            1       2             1              2            1            1         'benign'  
-     5         4          6            8       4             1              8           10            1         'malign'  
-     5         3          2            8       5            10              8            1            2         'malign'  
-    10         5         10            3       5             8              7            8            3         'malign'  
-     4         1          1            2       2             1              1            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     5        10         10           10      10            10             10            1            1         'malign'  
-     5         1          1            1       2             1              1            1            1         'benign'  
-    10         4          3           10       3            10              7            1            2         'malign'  
-     5        10         10           10       5             2              8            5            1         'malign'  
-     8        10         10           10       6            10             10           10           10         'malign'  
-     2         3          1            1       2             1              2            1            1         'benign'  
-     2         1          1            1       1             1              2            1            1         'benign'  
-     4         1          3            1       2             1              2            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       1             0              1            1            1         'benign'  
-     4         1          1            1       2             1              2            1            1         'benign'  
-     5         1          1            1       2             1              2            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     6         3          3            3       3             2              6            1            1         'benign'  
-     7         1          2            3       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     5         1          1            2       1             1              2            1            1         'benign'  
-     3         1          3            1       3             4              1            1            1         'benign'  
-     4         6          6            5       7             6              7            7            3         'malign'  
-     2         1          1            1       2             5              1            1            1         'benign'  
-     2         1          1            1       2             1              1            1            1         'benign'  
-     4         1          1            1       2             1              1            1            1         'benign'  
-     6         2          3            1       2             1              1            1            1         'benign'  
-     5         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     8         7          4            4       5             3              5           10            1         'malign'  
-     3         1          1            1       2             1              1            1            1         'benign'  
-     3         1          4            1       2             1              1            1            1         'benign'  
-    10        10          7            8       7             1             10           10            3         'malign'  
-     4         2          4            3       2             2              2            1            1         'benign'  
-     4         1          1            1       2             1              1            1            1         'benign'  
-     5         1          1            3       2             1              1            1            1         'benign'  
-     4         1          1            3       2             1              1            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     2         1          1            1       2             1              1            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     1         2          2            1       2             1              1            1            1         'benign'  
-     1         1          1            3       2             1              1            1            1         'benign'  
-     5        10         10           10      10             2             10           10           10         'malign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     3         1          1            2       3             4              1            1            1         'benign'  
-     1         2          1            3       2             1              2            1            1         'benign'  
-     5         1          1            1       2             1              2            2            1         'benign'  
-     4         1          1            1       2             1              2            1            1         'benign'  
-     3         1          1            1       2             1              3            1            1         'benign'  
-     3         1          1            1       2             1              2            1            1         'benign'  
-     5         1          1            1       2             1              2            1            1         'benign'  
-     5         4          5            1       8             1              3            6            1         'benign'  
-     7         8          8            7       3            10              7            2            3         'malign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     4         1          1            1       2             1              3            1            1         'benign'  
-     1         1          3            1       2             1              2            1            1         'benign'  
-     1         1          3            1       2             1              2            1            1         'benign'  
-     3         1          1            3       2             1              2            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     5         2          2            2       2             1              1            1            2         'benign'  
-     3         1          1            1       2             1              3            1            1         'benign'  
-     5         7          4            1       6             1              7           10            3         'malign'  
-     5        10         10            8       5             5              7           10            1         'malign'  
-     3        10          7            8       5             8              7            4            1         'malign'  
-     3         2          1            2       2             1              3            1            1         'benign'  
-     2         1          1            1       2             1              3            1            1         'benign'  
-     5         3          2            1       3             1              1            1            1         'benign'  
-     1         1          1            1       2             1              2            1            1         'benign'  
-     4         1          4            1       2             1              1            1            1         'benign'  
-     1         1          2            1       2             1              2            1            1         'benign'  
-     5         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     2         1          1            1       2             1              1            1            1         'benign'  
-    10        10         10           10       5            10             10           10            7         'malign'  
-     5        10         10           10       4            10              5            6            3         'malign'  
-     5         1          1            1       2             1              3            2            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       2             1              1            1            1         'benign'  
-     3         1          1            1       2             1              2            3            1         'benign'  
-     4         1          1            1       2             1              1            1            1         'benign'  
-     1         1          1            1       2             1              1            1            8         'benign'  
-     1         1          1            3       2             1              1            1            1         'benign'  
-     5        10         10            5       4             5              4            4            1         'malign'  
-     3         1          1            1       2             1              1            1            1         'benign'  
-     3         1          1            1       2             1              2            1            2         'benign'  
-     3         1          1            1       3             2              1            1            1         'benign'  
-     2         1          1            1       2             1              1            1            1         'benign'  
-     5        10         10            3       7             3              8           10            2         'malign'  
-     4         8          6            4       3             4             10            6            1         'malign'  
-     4         8          8            5       4             5             10            4            1         'malign'
-
-
-• Applied to another dataset (Indian Liver Patient) : 
-Age     Gender     TotalBilirubin     DB     AAP     Sgpt    Sgot    TP     ALB    A_G     Selector
-    ___    ________    ______________    ____    ____    ____    ____    ___    ___    ____    ________
-
-    65     'Female'     0.7               0.1     187      16      18    6.8    3.3     0.9    1       
-    62     'Male'      10.9               5.5     699      64     100    7.5    3.2    0.74    1       
-    62     'Male'       7.3               4.1     490      60      68      7    3.3    0.89    1       
-    58     'Male'         1               0.4     182      14      20    6.8    3.4       1    1       
-    72     'Male'       3.9                 2     195      27      59    7.3    2.4     0.4    1       
-    46     'Male'       1.8               0.7     208      19      14    7.6    4.4     1.3    1       
-    26     'Female'     0.9               0.2     154      16      12      7    3.5       1    1       
-    29     'Female'     0.9               0.3     202      14      11    6.7    3.6     1.1    1       
-    17     'Male'       0.9               0.3     202      22      19    7.4    4.1     1.2    2       
-    55     'Male'       0.7               0.2     290      53      58    6.8    3.4       1    1       
-    57     'Male'       0.6               0.1     210      51      59    5.9    2.7     0.8    1       
-    72     'Male'       2.7               1.3     260      31      56    7.4      3     0.6    1       
-    64     'Male'       0.9               0.3     310      61      58      7    3.4     0.9    2       
-    74     'Female'     1.1               0.4     214      22      30    8.1    4.1       1    1       
-    61     'Male'       0.7               0.2     145      53      41    5.8    2.7    0.87    1       
-    25     'Male'       0.6               0.1     183      91      53    5.5    2.3     0.7    2       
-    38     'Male'       1.8               0.8     342     168     441    7.6    4.4     1.3    1       
-    33     'Male'       1.6               0.5     165      15      23    7.3    3.5    0.92    2       
-    40     'Female'     0.9               0.3     293     232     245    6.8    3.1     0.8    1       
-    40     'Female'     0.9               0.3     293     232     245    6.8    3.1     0.8    1       
-    51     'Male'       2.2                 1     610      17      28    7.3    2.6    0.55    1       
-    51     'Male'       2.9               1.3     482      22      34      7    2.4     0.5    1       
-    62     'Male'       6.8                 3     542     116      66    6.4    3.1     0.9    1       
-    40     'Male'       1.9                 1     231      16      55    4.3    1.6     0.6    1       
-    63     'Male'       0.9               0.2     194      52      45      6    3.9    1.85    2       
-    34     'Male'       4.1                 2     289     875     731      5    2.7     1.1    1       
-    34     'Male'       4.1                 2     289     875     731      5    2.7     1.1    1       
-    34     'Male'       6.2                 3     240    1680     850    7.2      4     1.2    1       
-    20     'Male'       1.1               0.5     128      20      30    3.9    1.9    0.95    2       
-    84     'Female'     0.7               0.2     188      13      21      6    3.2     1.1    2       
-    57     'Male'         4               1.9     190      45     111    5.2    1.5     0.4    1       
-    52     'Male'       0.9               0.2     156      35      44    4.9    2.9     1.4    1       
-    57     'Male'         1               0.3     187      19      23    5.2    2.9     1.2    2       
-    38     'Female'     2.6               1.2     410      59      57    5.6      3     0.8    2       
-    38     'Female'     2.6               1.2     410      59      57    5.6      3     0.8    2       
-    30     'Male'       1.3               0.4     482     102      80    6.9    3.3     0.9    1       
-    17     'Female'     0.7               0.2     145      18      36    7.2    3.9    1.18    2       
-    46     'Female'    14.2               7.8     374      38      77    4.3      2     0.8    1       
-    48     'Male'       1.4               0.6     263      38      66    5.8    2.2    0.61    1       
-    47     'Male'       2.7               1.3     275     123      73    6.2    3.3     1.1    1       
-    45     'Male'       2.4               1.1     168      33      50    5.1    2.6       1    1       
-    62     'Male'       0.6               0.1     160      42     110    4.9    2.6     1.1    2       
-    42     'Male'       6.8               3.2     630      25      47    6.1    2.3     0.6    2       
-    50     'Male'       2.6               1.2     415     407     576    6.4    3.2       1    1       
-    85     'Female'       1               0.3     208      17      15      7    3.6       1    2       
-    35     'Male'       1.8               0.6     275      48     178    6.5    3.2     0.9    2       
-    21     'Male'       3.9               1.8     150      36      27    6.8    3.9    1.34    1       
-    40     'Male'       1.1               0.3     230    1630     960    4.9    2.8     1.3    1       
-    32     'Female'     0.6               0.1     176      39      28      6      3       1    1       
-    55     'Male'      18.4               8.8     206      64     178    6.2    1.8     0.4    1       
-    45     'Female'     0.7               0.2     170      21      14    5.7    2.5     0.7    1       
-    34     'Female'     0.6               0.1     161      15      19    6.6    3.4       1    1       
-    38     'Male'       3.1               1.6     253      80     406    6.8    3.9     1.3    1       
-    38     'Male'       1.1               0.3     198      86     150    6.3    3.5     1.2    1       
-    42     'Male'       8.9               4.5     272      31      61    5.8      2     0.5    1       
-    42     'Male'       8.9               4.5     272      31      61    5.8      2     0.5    1       
-    33     'Male'       0.8               0.2     198      26      23      8      4       1    2       
-    48     'Female'     0.9               0.2     175      24      54    5.5    2.7     0.9    2       
-    51     'Male'       0.8               0.2     367      42      18    5.2      2     0.6    1       
-    64     'Male'       1.1               0.5     145      20      24    5.5    3.2    1.39    2       
-    31     'Female'     0.8               0.2     158      21      16      6      3       1    1       
-    58     'Male'         1               0.5     158      37      43    7.2    3.6       1    1       
-    58     'Male'         1               0.5     158      37      43    7.2    3.6       1    1       
-    57     'Male'       0.7               0.2     208      35      97    5.1    2.1     0.7    1       
-    57     'Male'       1.3               0.4     259      40      86    6.5    2.5     0.6    1       
-    57     'Male'       1.4               0.7     470      62      88    5.6    2.5     0.8    1       
-    54     'Male'       2.2               1.2     195      55      95      6    3.7     1.6    1       
-    37     'Male'       1.8               0.8     215      53      58    6.4    3.8     1.4    1       
-    66     'Male'       0.7               0.2     239      27      26    6.3    3.7     1.4    1       
-    60     'Male'       0.8               0.2     215      24      17    6.3      3     0.9    2       
-    19     'Female'     0.7               0.2     186     166     397    5.5      3     1.2    1       
-    75     'Female'     0.8               0.2     188      20      29    4.4    1.8     0.6    1       
-    75     'Female'     0.8               0.2     205      27      24    4.4      2     0.8    1       
-    52     'Male'       0.6               0.1     171      22      16    6.6    3.6     1.2    1       
-    68     'Male'       0.7               0.1     145      20      22    5.8    2.9       1    1       
-    29     'Female'     0.7               0.1     162      52      41    5.2    2.5     0.9    2       
-    31     'Male'       0.9               0.2     518     189      17    5.3    2.3     0.7    1       
-    68     'Female'     0.6               0.1    1620      95     127    4.6    2.1     0.8    1       
-    70     'Male'       1.4               0.6     146      12      24    6.2    3.8    1.58    2       
-    58     'Female'     2.8               1.3     670      48      79    4.7    1.6     0.5    1       
-    58     'Female'     2.4               1.1     915      60     142    4.7    1.8     0.6    1       
-    29     'Male'         1               0.3      75      25      26    5.1    2.9     1.3    1       
-    49     'Male'       0.7               0.1     148      14      12    5.4    2.8       1    2       
-    33     'Male'         2                 1     258     194     152    5.4      3    1.25    1       
-    32     'Male'       0.6               0.1     237      45      31    7.5    4.3    1.34    1       
-    14     'Male'       1.4               0.5     269      58      45    6.7    3.9     1.4    1       
-    13     'Male'       0.6               0.1     320      28      56    7.2    3.6       1    2       
-    58     'Male'       0.8               0.2     298      33      59    6.2    3.1       1    1       
-    18     'Male'       0.6               0.2     538      33      34    7.5    3.2     0.7    1       
-    60     'Male'         4               1.9     238     119     350    7.1    3.3     0.8    1       
-    60     'Male'       5.7               2.8     214     412     850    7.3    3.2    0.78    1       
-    60     'Male'       6.8               3.2     308     404     794    6.8      3     0.7    1       
-    60     'Male'       8.6                 4     298     412     850    7.4      3     0.6    1       
-    60     'Male'       5.8               2.7     204     220     400      7      3     0.7    1       
-    60     'Male'       5.2               2.4     168     126     202    6.8    2.9     0.7    1       
-    75     'Male'       0.9               0.2     282      25      23    4.4    2.2       1    1       
-    39     'Male'       3.8               1.5     298     102     630    7.1    3.3     0.8    1       
-    39     'Male'       6.6                 3     215     190     950      4    1.7     0.7    1       
-    18     'Male'       0.6               0.1     265      97     161    5.9    3.1     1.1    1       
-    18     'Male'       0.7               0.1     312     308     405    6.9    3.7     1.1    1       
-    27     'Male'       0.6               0.2     161      27      28    3.7    1.6    0.76    2       
-    27     'Male'       0.7               0.2     243      21      23    5.3    2.3     0.7    2       
-    17     'Male'       0.9               0.2     224      36      45    6.9    4.2    1.55    1       
-    55     'Female'     0.8               0.2     225      14      23    6.1    3.3     1.2    2       
-    63     'Male'       0.5               0.1     170      21      28    5.5    2.5     0.8    1       
-    36     'Male'       5.3               2.3     145      32      92    5.1    2.6       1    2       
-    36     'Male'       5.3               2.3     145      32      92    5.1    2.6       1    2       
-    36     'Male'       0.8               0.2     158      29      39      6    2.2     0.5    2       
-    36     'Male'       0.8               0.2     158      29      39      6    2.2     0.5    2       
-    36     'Male'       0.9               0.1     486      25      34    5.9    2.8     0.9    2       
-    24     'Female'     0.7               0.2     188      11      10    5.5    2.3    0.71    2       
-    48     'Male'       3.2               1.6     257      33     116    5.7    2.2    0.62    1       
-    27     'Male'       1.2               0.4     179      63      39    6.1    3.3     1.1    2       
-    74     'Male'       0.6               0.1     272      24      98      5      2     0.6    1       
-    50     'Male'       5.8                 3     661     181     285    5.7    2.3    0.67    2       
-    50     'Male'       7.3               3.6    1580      88      64    5.6    2.3     0.6    2       
-    48     'Male'       0.7               0.1    1630      74     149    5.3      2     0.6    1       
-    32     'Male'      12.7               6.2     194    2000    2946    5.7    3.3     1.3    1       
-    32     'Male'      15.9                 7     280    1350    1600    5.6    2.8       1    1       
-    32     'Male'        18               8.2     298    1250    1050    5.4    2.6     0.9    1       
-    32     'Male'        23              11.3     300     482     275    7.1    3.5     0.9    1       
-    32     'Male'      22.7              10.2     290     322     113    6.6    2.8     0.7    1       
-    58     'Male'       1.7               0.8     188      60      84    5.9    3.5     1.4    2       
-    64     'Female'     0.8               0.2     178      17      18    6.3    3.1     0.9    1       
-    28     'Male'       0.6               0.1     177      36      29    6.9    4.1     1.4    2       
-    60     'Male'       1.8               0.5     201      45      25    3.9    1.7     0.7    2       
-    48     'Male'       5.8               2.5     802     133      88      6    2.8     0.8    1       
-    64     'Male'         3               1.4     248      46      40    6.5    3.2     0.9    1       
-    58     'Female'     1.7               0.8    1896      61      83      8    3.9    0.95    1       
-    45     'Male'       2.8               1.7     263      57      65    5.1    2.3     0.8    1       
-    45     'Male'       3.2               1.4     512      50      58      6    2.7     0.8    1       
-    70     'Female'     0.7               0.2     237      18      28    5.8    2.5    0.75    2       
-    18     'Female'     0.8               0.2     199      34      31    6.5    3.5    1.16    2       
-    53     'Male'       0.9               0.4     238      17      14    6.6    2.9     0.8    1       
-    18     'Male'       1.8               0.7     178      35      36    6.8    3.6     1.1    1       
-    66     'Male'      11.3               5.6    1110    1250    4929      7    2.4     0.5    1       
-    46     'Female'     4.7               2.2     310      62      90    6.4    2.5     0.6    1       
-    18     'Male'       0.8               0.2     282      72     140    5.5    2.5     0.8    1       
-    18     'Male'       0.8               0.2     282      72     140    5.5    2.5     0.8    1       
-    15     'Male'       0.8               0.2     380      25      66    6.1    3.7     1.5    1       
-    60     'Male'       0.6               0.1     186      20      21    6.2    3.3     1.1    2       
-    66     'Female'     4.2               2.1     159      15      30    7.1    2.2     0.4    1       
-    30     'Male'       1.6               0.4     332      84     139    5.6    2.7     0.9    1       
-    30     'Male'       1.6               0.4     332      84     139    5.6    2.7     0.9    1       
-    45     'Female'     3.5               1.5     189      63      87    5.6    2.9       1    1       
-    65     'Male'       0.8               0.2     201      18      22    5.4    2.9     1.1    2       
-    66     'Female'     2.9               1.3     168      21      38    5.5    1.8     0.4    1       
-    65     'Male'       0.7               0.1     392      20      30    5.3    2.8     1.1    1       
-    50     'Male'       0.9               0.2     202      20      26    7.2    4.5    1.66    1       
-    60     'Male'       0.8               0.2     286      21      27    7.1      4     1.2    1       
-    56     'Male'       1.1               0.5     180      30      42    6.9    3.8     1.2    2       
-    50     'Male'       1.6               0.8     218      18      20    5.9    2.9    0.96    1       
-    46     'Female'     0.8               0.2     182      20      40      6    2.9     0.9    1       
-    52     'Male'       0.6               0.1     178      26      27    6.5    3.6     1.2    2       
-    34     'Male'       5.9               2.5     290      45     233    5.6    2.7     0.9    1       
-    34     'Male'       8.7                 4     298      58     138    5.8    2.4     0.7    1       
-    32     'Male'       0.9               0.3     462      70      82    6.2    3.1       1    1       
-    72     'Male'       0.7               0.1     196      20      35    5.8      2     0.5    1       
-    72     'Male'       0.7               0.1     196      20      35    5.8      2     0.5    1       
-    50     'Male'       1.2               0.4     282      36      32    7.2    3.9     1.1    1       
-    60     'Male'        11               4.9     750     140     350    5.5    2.1     0.6    1       
-    60     'Male'      11.5                 5    1050      99     187    6.2    2.8     0.8    1       
-    60     'Male'       5.8               2.7     599      43      66    5.4    1.8     0.5    1       
-    39     'Male'       1.9               0.9     180      42      62    7.4    4.3    1.38    1       
-    39     'Male'       1.9               0.9     180      42      62    7.4    4.3    1.38    1       
-    48     'Male'       4.5               2.3     282      13      74      7    2.4    0.52    1       
-    55     'Male'        75               3.6     332      40      66    6.2    2.5     0.6    1       
-    47     'Female'       3               1.5     292      64      67    5.6    1.8    0.47    1       
-    60     'Male'      22.8              12.6     962      53      41    6.9    3.3     0.9    1       
-    60     'Male'       8.9                 4     950      33      32    6.8    3.1     0.8    1       
-    72     'Male'       1.7               0.8     200      28      37    6.2      3    0.93    1       
-    44     'Female'     1.9               0.6     298     378     602    6.6    3.3       1    1       
-    55     'Male'      14.1               7.6     750      35      63      5    1.6    0.47    1       
-    31     'Male'       0.6               0.1     175      48      34      6    3.7     1.6    1       
-    31     'Male'       0.6               0.1     175      48      34      6    3.7     1.6    1       
-    31     'Male'       0.8               0.2     198      43      31    7.3      4     1.2    1       
-    55     'Male'       0.8               0.2     482     112      99    5.7    2.6     0.8    1       
-    75     'Male'      14.8                 9    1020      71      42    5.3    2.2     0.7    1       
-    75     'Male'      10.6                 5     562      37      29    5.1    1.8     0.5    1       
-    75     'Male'         8               4.6     386      30      25    5.5    1.8    0.48    1       
-    75     'Male'       2.8               1.3     250      23      29    2.7    0.9     0.5    1       
-    75     'Male'       2.9               1.3     218      33      37      3    1.5       1    1       
-    65     'Male'       1.9               0.8     170      36      43    3.8    1.4    0.58    2       
-    40     'Male'       0.6               0.1     171      20      17    5.4    2.5     0.8    1       
-    64     'Male'       1.1               0.4     201      18      19    6.9    4.1     1.4    1       
-    38     'Male'       1.5               0.4     298      60     103      6      3       1    2       
-    60     'Male'       3.2               1.8     750      79     145    7.8    3.2    0.69    1       
-    60     'Male'       2.1                 1     191     114     247      4    1.6     0.6    1       
-    60     'Male'       1.9               0.8     614      42      38    4.5    1.8     0.6    1       
-    48     'Female'     0.8               0.2     218      32      28    5.2    2.5     0.9    2       
-    60     'Male'       6.3               3.2     314     118     114    6.6    3.7    1.27    1       
-    60     'Male'       5.8                 3     257     107     104    6.6    3.5    1.12    1       
-    60     'Male'       2.3               0.6     272      79      51    6.6    3.5     1.1    1       
-    49     'Male'       1.3               0.4     206      30      25      6    3.1    1.06    2       
-    49     'Male'         2               0.6     209      48      32    5.7      3     1.1    2       
-    60     'Male'       2.4                 1    1124      30      54    5.2    1.9     0.5    1       
-    60     'Male'         2               1.1     664      52     104      6    2.1    0.53    1       
-    26     'Female'     0.6               0.2     142      12      32    5.7    2.4    0.75    1       
-    41     'Male'       0.9               0.2     169      22      18    6.1      3     0.9    2       
-     7     'Female'    27.2              11.8    1420     790    1050    6.1      2     0.4    1       
-    49     'Male'       0.6               0.1     218      50      53      5    2.4     0.9    1       
-    49     'Male'       0.6               0.1     218      50      53      5    2.4     0.9    1       
-    38     'Female'     0.8               0.2     145      19      23    6.1    3.1    1.03    2       
-    21     'Male'         1               0.3     142      27      21    6.4    3.5     1.2    2       
-    21     'Male'       0.7               0.2     135      27      26    6.4    3.3       1    2       
-    45     'Male'       2.5               1.2     163      28      22    7.6      4     1.1    1       
-    40     'Male'       3.6               1.8     285      50      60      7    2.9     0.7    1       
-    40     'Male'       3.9               1.7     350     950    1500    6.7    3.8     1.3    1       
-    70     'Female'     0.9               0.3     220      53      95    6.1    2.8    0.68    1       
-    45     'Female'     0.9               0.3     189      23      33    6.6    3.9     NaN    1       
-    28     'Male'       0.8               0.3     190      20      14    4.1    2.4     1.4    1       
-    42     'Male'       2.7               1.3     219      60     180      7    3.2     0.8    1       
-    22     'Male'       2.7                 1     160      82     127    5.5    3.1     1.2    2       
-     8     'Female'     0.9               0.2     401      25      58    7.5    3.4     0.8    1       
-    38     'Male'       1.7                 1     180      18      34    7.2    3.6       1    1       
-    66     'Male'       0.6               0.2     100      17     148      5    3.3     1.9    2       
-    55     'Male'       0.9               0.2     116      36      16    6.2    3.2       1    2       
-    49     'Male'       1.1               0.5     159      30      31      7    4.3     1.5    1       
-     6     'Male'       0.6               0.1     289      38      30    4.8      2     0.7    2       
-    37     'Male'       0.8               0.2     125      41      39    6.4    3.4     1.1    1       
-    37     'Male'       0.8               0.2     147      27      46      5    2.5       1    1       
-    47     'Male'       0.9               0.2     192      38      24    7.3    4.3     1.4    1       
-    47     'Male'       0.9               0.2     265      40      28      8      4       1    1       
-    50     'Male'       1.1               0.3     175      20      19    7.1    4.5     1.7    2       
-    70     'Male'       1.7               0.5     400      56      44    5.7    3.1     1.1    1       
-    26     'Male'       0.6               0.2     120      45      51    7.9      4       1    1       
-    26     'Male'       1.3               0.4     173      38      62      8      4       1    1       
-    68     'Female'     0.7               0.2     186      18      15    6.4    3.8     1.4    1       
-    65     'Female'       1               0.3     202      26      13    5.3    2.6     0.9    2       
-    46     'Male'       0.6               0.2     290      26      21      6      3       1    1       
-    61     'Male'       1.5               0.6     196      61      85    6.7    3.8     1.3    2       
-    61     'Male'       0.8               0.1     282      85     231    8.5    4.3       1    1       
-    50     'Male'       2.7               1.6     157     149     156    7.9    3.1     0.6    1       
-    33     'Male'         2               1.4    2110      48      89    6.2      3     0.9    1       
-    40     'Female'     0.9               0.2     285      32      27    7.7    3.5     0.8    1       
-    60     'Male'       1.5               0.6     360     230     298    4.5      2     0.8    1       
-    22     'Male'       0.8               0.2     300      57      40    7.9    3.8     0.9    2       
-    35     'Female'     0.9               0.3     158      20      16      8      4       1    1       
-    35     'Female'     0.9               0.2     190      40      35    7.3    4.7     1.8    2       
-    40     'Male'       0.9               0.3     196      69      48    6.8    3.1     0.8    1       
-    48     'Male'       0.7               0.2     165      32      30      8      4       1    2       
-    51     'Male'       0.8               0.2     230      24      46    6.5    3.1     NaN    1       
-    29     'Female'     0.8               0.2     205      30      23    8.2    4.1       1    1       
-    28     'Female'     0.9               0.2     316      25      23    8.5    5.5     1.8    1       
-    54     'Male'       0.8               0.2     218      20      19    6.3    2.5     0.6    1       
-    54     'Male'       0.9               0.2     290      15      18    6.1    2.8     0.8    1       
-    55     'Male'       1.8                 9     272      22      79    6.1    2.7     0.7    1       
-    55     'Male'       0.9               0.2     190      25      28    5.9    2.7     0.8    1       
-    40     'Male'       0.7               0.1     202      37      29      5    2.6       1    1       
-    33     'Male'       1.2               0.3     498      28      25      7      3     0.7    1       
-    33     'Male'       2.1               1.3     480      38      22    6.5      3     0.8    1       
-    33     'Male'       0.9               0.8     680      37      40    5.9    2.6     0.8    1       
-    65     'Male'       1.1               0.3     258      48      40      7    3.9     1.2    2       
-    35     'Female'     0.6               0.2     180      12      15    5.2    2.7     NaN    2       
-    38     'Female'     0.7               0.1     152      90      21    7.1    4.2     1.4    2       
-    38     'Male'       1.7               0.7     859      89      48      6      3       1    1       
-    50     'Male'       0.9               0.3     901      23      17    6.2    3.5     1.2    1       
-    44     'Male'       0.8               0.2     335     148      86    5.6      3     1.1    1       
-    36     'Male'       0.8               0.2     182      31      34    6.4    3.8     1.4    2       
-    42     'Male'      30.5              14.2     285      65     130    5.2    2.1     0.6    1       
-    42     'Male'      16.4               8.9     245      56      87    5.4      2     0.5    1       
-    33     'Male'       1.5                 7     505     205     140    7.5    3.9       1    1       
-    18     'Male'       0.8               0.2     228      55      54    6.9      4     1.3    1       
-    38     'Female'     0.8               0.2     185      25      21      7      3     0.7    1       
-    38     'Male'       0.8               0.2     247      55      92    7.4    4.3    1.38    2       
-     4     'Male'       0.9               0.2     348      30      34      8      4       1    2       
-    62     'Male'       1.2               0.4     195      38      54    6.3    3.8     1.5    1       
-    43     'Female'     0.9               0.3     140      12      29    7.4    3.5     1.8    1       
-    40     'Male'      14.5               6.4     358      50      75    5.7    2.1     0.5    1       
-    26     'Male'       0.6               0.1     110      15      20    2.8    1.6     1.3    1       
-    37     'Male'       0.7               0.2     235      96      54    9.5    4.9       1    1       
-     4     'Male'       0.8               0.2     460     152     231    6.5    3.2     0.9    2       
-    21     'Male'      18.5               9.5     380     390     500    8.2    4.1       1    1       
-    30     'Male'       0.7               0.2     262      15      18    9.6    4.7     1.2    1       
-    33     'Male'       1.8               0.8     196      25      22      8      4       1    1       
-    26     'Male'       1.9               0.8     180      22      19    8.2    4.1       1    2       
-    35     'Male'       0.9               0.2     190      25      20    6.4    3.6     1.2    2       
-    60     'Male'         2               0.8     190      45      40      6    2.8     0.8    1       
-    45     'Male'       2.2               0.8     209      25      20      8      4       1    1       
-    48     'Female'       1               1.4     144      18      14    8.3    4.2       1    1       
-    58     'Male'       0.8               0.2     123      56      48      6      3       1    1       
-    50     'Male'       0.7               0.2     192      18      15    7.4    4.2     1.3    2       
-    50     'Male'       0.7               0.2     188      12      14      7    3.4     0.9    1       
-    18     'Male'       1.3               0.7     316      10      21      6    2.1     0.5    2       
-    18     'Male'       0.9               0.3     300      30      48      8      4       1    1       
-    13     'Male'       1.5               0.5     575      29      24    7.9    3.9     0.9    1       
-    34     'Female'     0.8               0.2     192      15      12    8.6    4.7     1.2    1       
-    43     'Male'       1.3               0.6     155      15      20      8      4       1    2       
-    50     'Female'       1               0.5     239      16      39    7.5    3.7     0.9    1       
-    57     'Male'       4.5               2.3     315     120     105      7      4     1.3    1       
-    45     'Female'       1               0.3     250      48      44    8.6    4.3       1    1       
-    60     'Male'       0.7               0.2     174      32      14    7.8    4.2     1.1    2       
-    45     'Male'       0.6               0.2     245      22      24    7.1    3.4     0.9    1       
-    23     'Male'       1.1               0.5     191      37      41    7.7    4.3     1.2    2       
-    22     'Male'       2.4                 1     340      25      21    8.3    4.5     1.1    1       
-    22     'Male'       0.6               0.2     202      78      41      8    3.9     0.9    1       
-    74     'Female'     0.9               0.3     234      16      19    7.9      4       1    1       
-    25     'Female'     0.9               0.3     159      24      25    6.9    4.4     1.7    2       
-    31     'Female'     1.1               0.3     190      26      15    7.9    3.8     0.9    1       
-    24     'Female'     0.9               0.2     195      40      35    7.4    4.1     1.2    2       
-    58     'Male'       0.8               0.2     180      32      25    8.2    4.4     1.1    2       
-    51     'Female'     0.9               0.2     280      21      30    6.7    3.2     0.8    1       
-    50     'Female'     1.7               0.6     430      28      32    6.8    3.5       1    1       
-    50     'Male'       0.7               0.2     206      18      17    8.4    4.2       1    2       
-    55     'Female'     0.8               0.2     155      21      17    6.9    3.8     1.4    1       
-    54     'Female'     1.4               0.7     195      36      16    7.9    3.7     0.9    2       
-    48     'Male'       1.6                 1     588      74     113    7.3    2.4     0.4    1       
-    30     'Male'       0.8               0.2     174      21      47    4.6    2.3       1    1       
-    45     'Female'     0.8               0.2     165      22      18    8.2    4.1       1    1       
-    48     'Female'     1.1               0.7     527     178     250      8    4.2     1.1    1       
-    51     'Male'       0.8               0.2     175      48      22    8.1    4.6     1.3    1       
-    54     'Female'    23.2              12.6     574      43      47    7.2    3.5     0.9    1       
-    27     'Male'       1.3               0.6     106      25      54    8.5    4.8     NaN    2       
-    30     'Female'     0.8               0.2     158      25      22    7.9    4.5     1.3    2       
-    26     'Male'         2               0.9     195      24      65    7.8    4.3     1.2    1       
-    22     'Male'       0.9               0.3     179      18      21    6.7    3.7     1.2    2       
-    44     'Male'       0.9               0.2     182      29      82    7.1    3.7       1    2       
-    35     'Male'       0.7               0.2     198      42      30    6.8    3.4       1    1       
-    38     'Male'       3.7               2.2     216     179     232    7.8    4.5     1.3    1       
-    14     'Male'       0.9               0.3     310      21      16    8.1    4.2       1    2       
-    30     'Female'     0.7               0.2      63      31      27    5.8    3.4     1.4    1       
-    30     'Female'     0.8               0.2     198      30      58    5.2    2.8     1.1    1       
-    36     'Male'       1.7               0.5     205      36      34    7.1    3.9     1.2    1       
-    12     'Male'       0.8               0.2     302      47      67    6.7    3.5     1.1    2       
-    60     'Male'       2.6               1.2     171      42      37    5.4    2.7       1    1       
-    42     'Male'       0.8               0.2     158      27      23    6.7    3.1     0.8    2       
-    36     'Female'     1.2               0.4     358     160      90    8.3    4.4     1.1    2       
-    24     'Male'       3.3               1.6     174      11      33    7.6    3.9       1    2       
-    43     'Male'       0.8               0.2     192      29      20      6    2.9     0.9    2       
-    21     'Male'       0.7               0.2     211      14      23    7.3    4.1     1.2    2       
-    26     'Male'         2               0.9     157      54      68    6.1    2.7     0.8    1       
-    26     'Male'       1.7               0.6     210      62      56    5.4    2.2     0.6    1       
-    26     'Male'       7.1               3.3     258      80     113    6.2    2.9     0.8    1       
-    36     'Female'     0.7               0.2     152      21      25    5.9    3.1     1.1    2       
-    13     'Female'     0.7               0.2     350      17      24    7.4      4     1.1    1       
-    13     'Female'     0.7               0.1     182      24      19    8.9    4.9     1.2    1       
-    75     'Male'       6.7               3.6     458     198     143    6.2    3.2       1    1       
-    75     'Male'       2.5               1.2     375      85      68    6.4    2.9     0.8    1       
-    75     'Male'       1.8               0.8     405      79      50    6.1    2.9     0.9    1       
-    75     'Male'       1.4               0.4     215      50      30    5.9    2.6     0.7    1       
-    75     'Male'       0.9               0.2     206      44      33    6.2    2.9     0.8    1       
-    36     'Female'     0.8               0.2     650      70     138    6.6    3.1     0.8    1       
-    35     'Male'       0.8               0.2     198      36      32      7      4     1.3    2       
-    70     'Male'       3.1               1.6     198      40      28    5.6      2     0.5    1       
-    37     'Male'       0.8               0.2     195      60      40    8.2      5     1.5    2       
-    60     'Male'       2.9               1.3     230      32      44    5.6      2     0.5    1       
-    46     'Male'       0.6               0.2     115      14      11    6.9    3.4     0.9    1       
-    38     'Male'       0.7               0.2     216     349     105      7    3.5       1    1       
-    70     'Male'       1.3               0.4     358      19      14    6.1    2.8     0.8    1       
-    49     'Female'     0.8               0.2     158      19      15    6.6    3.6     1.2    2       
-    37     'Male'       1.8               0.8     145      62      58    5.7    2.9       1    1       
-    37     'Male'       1.3               0.4     195      41      38    5.3    2.1     0.6    1       
-    26     'Female'     0.7               0.2     144      36      33    8.2    4.3     1.1    1       
-    48     'Female'     1.4               0.8     621     110     176    7.2    3.9     1.1    1       
-    48     'Female'     0.8               0.2     150      25      23    7.5    3.9       1    1       
-    19     'Male'       1.4               0.8     178      13      26      8    4.6     1.3    2       
-    33     'Male'       0.7               0.2     256      21      30    8.5    3.9     0.8    1       
-    33     'Male'       2.1               0.7     205      50      38    6.8      3     0.7    1       
-    37     'Male'       0.7               0.2     176      28      34    5.6    2.6     0.8    1       
-    69     'Female'     0.8               0.2     146      42      70    8.4    4.9     1.4    2       
-    24     'Male'       0.7               0.2     218      47      26    6.6    3.3       1    1       
-    65     'Female'     0.7               0.2     182      23      28    6.8    2.9     0.7    2       
-    55     'Male'       1.1               0.3     215      21      15    6.2    2.9     0.8    2       
-    42     'Female'     0.9               0.2     165      26      29    8.5    4.4       1    2       
-    21     'Male'       0.8               0.2     183      33      57    6.8    3.5       1    2       
-    40     'Male'       0.7               0.2     176      28      43    5.3    2.4     0.8    2       
-    16     'Male'       0.7               0.2     418      28      35    7.2    4.1     1.3    2       
-    60     'Male'       2.2                 1     271      45      52    6.1    2.9     0.9    2       
-    42     'Female'     0.8               0.2     182      22      20    7.2    3.9     1.1    1       
-    58     'Female'     0.8               0.2     130      24      25      7      4     1.3    1       
-    54     'Female'    22.6              11.4     558      30      37    7.8    3.4     0.8    1       
-    33     'Male'       0.8               0.2     135      30      29    7.2    4.4     1.5    2       
-    48     'Male'       0.7               0.2     326      29      17    8.7    5.5     1.7    1       
-    25     'Female'     0.7               0.1     140      32      25    7.6    4.3     1.3    2       
-    56     'Female'     0.7               0.1     145      26      23      7      4     1.3    2       
-    47     'Male'       3.5               1.6     206      32      31    6.8    3.4       1    1       
-    33     'Male'       0.7               0.1     168      35      33      7    3.7     1.1    1       
-    20     'Female'     0.6               0.2     202      12      13    6.1      3     0.9    2       
-    50     'Female'     0.7               0.1     192      20      41    7.3    3.3     0.8    1       
-    72     'Male'       0.7               0.2     185      16      22    7.3    3.7       1    2       
-    50     'Male'       1.7               0.8     331      36      53    7.3    3.4     0.9    1       
-    39     'Male'       0.6               0.2     188      28      43    8.1    3.3     0.6    1       
-    58     'Female'     0.7               0.1     172      27      22    6.7    3.2     0.9    1       
-    60     'Female'     1.4               0.7     159      10      12    4.9    2.5       1    2       
-    34     'Male'       3.7               2.1     490     115      91    6.5    2.8     0.7    1       
-    50     'Male'       0.8               0.2     152      29      30    7.4    4.1     1.3    1       
-    38     'Male'       2.7               1.4     105      25      21    7.5    4.2     1.2    2       
-    51     'Male'       0.8               0.2     160      34      20    6.9    3.7     1.1    1       
-    46     'Male'       0.8               0.2     160      31      40    7.3    3.8     1.1    1       
-    72     'Male'       0.6               0.1     102      31      35    6.3    3.2       1    1       
-    72     'Male'       0.8               0.2     148      23      35      6      3       1    1       
-    75     'Male'       0.9               0.2     162      25      20    6.9    3.7     1.1    1       
-    41     'Male'       7.5               4.3     149      94      92    6.3    3.1     0.9    1       
-    41     'Male'       2.7               1.3     580     142      68      8      4       1    1       
-    48     'Female'       1               0.3     310      37      56    5.9    2.5     0.7    1       
-    45     'Male'       0.8               0.2     140      24      20    6.3    3.2       1    2       
-    74     'Male'         1               0.3     175      30      32    6.4    3.4     1.1    1       
-    78     'Male'         1               0.3     152      28      70    6.3    3.1     0.9    1       
-    38     'Male'       0.8               0.2     208      25      50    7.1    3.7       1    1       
-    27     'Male'         1               0.2     205     137     145      6      3       1    1       
-    66     'Female'     0.7               0.2     162      24      20    6.4    3.2       1    2       
-    50     'Male'       7.3               3.7      92      44     236    6.8    1.6     0.3    1       
-    42     'Female'     0.5               0.1     162     155     108    8.1      4     0.9    1       
-    65     'Male'       0.7               0.2     199      19      22    6.3    3.6     1.3    2       
-    22     'Male'       0.8               0.2     198      20      26    6.8    3.9     1.3    1       
-    31     'Female'     0.8               0.2     215      15      21    7.6      4     1.1    1       
-    45     'Male'       0.7               0.2     180      18      58    6.7    3.7     1.2    2       
-    12     'Male'         1               0.2     719     157     108    7.2    3.7       1    1       
-    48     'Male'       2.4               1.1     554     141      73    7.5    3.6     0.9    1       
-    48     'Male'         5               2.6     555     284     190    6.5    3.3       1    1       
-    18     'Male'       1.4               0.6     215     440     850      5    1.9     0.6    1       
-    23     'Female'     2.3               0.8     509      28      44    6.9    2.9     0.7    2       
-    65     'Male'       4.9               2.7     190      33      71    7.1    2.9     0.7    1       
-    48     'Male'       0.7               0.2     208      15      30    4.6    2.1     0.8    2       
-    65     'Male'       1.4               0.6     260      28      24    5.2    2.2     0.7    2       
-    70     'Male'       1.3               0.3     690      93      40    3.6    2.7     0.7    1       
-    70     'Male'       0.6               0.1     862      76     180    6.3    2.7    0.75    1       
-    11     'Male'       0.7               0.1     592      26      29    7.1    4.2     1.4    2       
-    50     'Male'       4.2               2.3     450      69      50      7      3     0.7    1       
-    55     'Female'     8.2               3.9    1350      52      65    6.7    2.9     0.7    1       
-    55     'Female'    10.9               5.1    1350      48      57    6.4    2.3     0.5    1       
-    26     'Male'         1               0.3     163      48      71    7.1    3.7       1    2       
-    41     'Male'       1.2               0.5     246      34      42    6.9    3.4    0.97    1       
-    53     'Male'       1.6               0.9     178      44      59    6.5    3.9     1.5    2       
-    32     'Female'     0.7               0.1     240      12      15      7      3     0.7    1       
-    58     'Male'       0.4               0.1     100      59     126    4.3    2.5     1.4    1       
-    45     'Male'       1.3               0.6     166      49      42    5.6    2.5     0.8    2       
-    65     'Male'       0.9               0.2     170      33      66      7      3    0.75    1       
-    52     'Female'     0.6               0.1     194      10      12    6.9    3.3     0.9    2       
-    73     'Male'       1.9               0.7    1750     102     141    5.5      2     0.5    1       
-    53     'Female'     0.7               0.1     182      20      33    4.8    1.9     0.6    1       
-    47     'Female'     0.8               0.2     236      10      13    6.7    2.9    0.76    2       
-    29     'Male'       0.7               0.2     165      55      87    7.5    4.6    1.58    1       
-    41     'Female'     0.9               0.2     201      31      24    7.6    3.8       1    2       
-    30     'Female'     0.7               0.2     194      32      36    7.5    3.6    0.92    2       
-    17     'Female'     0.5               0.1     206      28      21    7.1    4.5     1.7    2       
-    23     'Male'         1               0.3     212      41      80    6.2    3.1       1    1       
-    35     'Male'       1.6               0.7     157      15      44    5.2    2.5     0.9    1       
-    65     'Male'       0.8               0.2     162      30      90    3.8    1.4     0.5    1       
-    42     'Female'     0.8               0.2     168      25      18    6.2    3.1       1    1       
-    49     'Female'     0.8               0.2     198      23      20      7    4.3     1.5    1       
-    42     'Female'     2.3               1.1     292      29      39    4.1    1.8     0.7    1       
-    42     'Female'     7.4               3.6     298      52     102    4.6    1.9     0.7    1       
-    42     'Female'     0.7               0.2     152      35      81    6.2    3.2    1.06    1       
-    61     'Male'       0.8               0.2     163      18      19    6.3    2.8     0.8    2       
-    17     'Male'       0.9               0.2     279      40      46    7.3      4     1.2    2       
-    54     'Male'       0.8               0.2     181      35      20    5.5    2.7    0.96    1       
-    45     'Female'    23.3              12.8    1550     425     511    7.7    3.5     0.8    1       
-    48     'Female'     0.8               0.2     142      26      25      6    2.6     0.7    1       
-    48     'Female'     0.9               0.2     173      26      27    6.2    3.1       1    1       
-    65     'Male'       7.9               4.3     282      50      72      6      3       1    1       
-    35     'Male'       0.8               0.2     279      20      25    7.2    3.2     0.8    1       
-    58     'Male'       0.9               0.2    1100      25      36    7.1    3.5     0.9    1       
-    46     'Male'       0.7               0.2     224      40      23    7.1      3     0.7    1       
-    28     'Male'       0.6               0.2     159      15      16      7    3.5       1    2       
-    21     'Female'     0.6               0.1     186      25      22    6.8    3.4       1    1       
-    32     'Male'       0.7               0.2     189      22      43    7.4    3.1     0.7    2       
-    61     'Male'       0.8               0.2     192      28      35    6.9    3.4     0.9    2       
-    26     'Male'       6.8               3.2     140      37      19    3.6    0.9     0.3    1       
-    65     'Male'       1.1               0.5     686      16      46    5.7    1.5    0.35    1       
-    22     'Female'     2.2                 1     215     159      51    5.5    2.5     0.8    1       
-    28     'Female'     0.8               0.2     309      55      23    6.8    4.1    1.51    1       
-    38     'Male'       0.7               0.2     110      22      18    6.4    2.5    0.64    1       
-    25     'Male'       0.8               0.1     130      23      42      8      4       1    1       
-    45     'Female'     0.7               0.2     164      21      53    4.5    1.4    0.45    2       
-    45     'Female'     0.6               0.1     270      23      42    5.1      2     0.5    2       
-    28     'Female'     0.6               0.1     137      22      16    4.9    1.9     0.6    2       
-    28     'Female'       1               0.3      90      18     108    6.8    3.1     0.8    2       
-    66     'Male'         1               0.3     190      30      54    5.3    2.1     0.6    1       
-    66     'Male'       0.8               0.2     165      22      32    4.4      2     0.8    1       
-    66     'Male'       1.1               0.5     167      13      56    7.1    4.1    1.36    1       
-    49     'Female'     0.6               0.1     185      17      26    6.6    2.9     0.7    2       
-    42     'Male'       0.7               0.2     197      64      33    5.8    2.4     0.7    2       
-    42     'Male'         1               0.3     154      38      21    6.8    3.9     1.3    2       
-    35     'Male'         2               1.1     226      33     135      6    2.7     0.8    2       
-    38     'Male'       2.2                 1     310     119      42    7.9    4.1       1    2       
-    38     'Male'       0.9               0.3     310      15      25    5.5    2.7       1    1       
-    55     'Male'       0.6               0.2     220      24      32    5.1    2.4    0.88    1       
-    33     'Male'       7.1               3.7     196     622     497    6.9    3.6    1.09    1       
-    33     'Male'       3.4               1.6     186     779     844    7.3    3.2     0.7    1       
-     7     'Male'       0.5               0.1     352      28      51    7.9    4.2     1.1    2       
-    45     'Male'       2.3               1.3     282     132     368    7.3      4     1.2    1       
-    45     'Male'       1.1               0.4      92      91     188    7.2    3.8    1.11    1       
-    30     'Male'       0.8               0.2     182      46      57    7.8    4.3     1.2    2       
-    62     'Male'         5               2.1     103      18      40      5    2.1    1.72    1       
-    22     'Female'     6.7               3.2     850     154     248    6.2    2.8     0.8    1       
-    42     'Female'     0.8               0.2     195      18      15    6.7      3     0.8    1       
-    32     'Male'       0.7               0.2     276     102     190      6    2.9    0.93    1       
-    60     'Male'       0.7               0.2     171      31      26      7    3.5       1    2       
-    65     'Male'       0.8               0.1     146      17      29    5.9    3.2    1.18    2       
-    53     'Female'     0.8               0.2     193      96      57    6.7    3.6    1.16    1       
-    27     'Male'         1               0.3     180      56     111    6.8    3.9    1.85    2       
-    35     'Female'       1               0.3     805     133     103    7.9    3.3     0.7    1       
-    65     'Male'       0.7               0.2     265      30      28    5.2    1.8    0.52    2       
-    25     'Male'       0.7               0.2     185     196     401    6.5    3.9     1.5    1       
-    32     'Male'       0.7               0.2     165      31      29    6.1      3    0.96    2       
-    24     'Male'         1               0.2     189      52      31      8    4.8     1.5    1       
-    67     'Male'       2.2               1.1     198      42      39    7.2      3     0.7    1       
-    68     'Male'       1.8               0.5     151      18      22    6.5      4     1.6    1       
-    55     'Male'       3.6               1.6     349      40      70    7.2    2.9     0.6    1       
-    70     'Male'       2.7               1.2     365      62      55      6    2.4     0.6    1       
-    36     'Male'       2.8               1.5     305      28      76    5.9    2.5     0.7    1       
-    42     'Male'       0.8               0.2     127      29      30    4.9    2.7     1.2    1       
-    53     'Male'      19.8              10.4     238      39     221    8.1    2.5     0.4    1       
-    32     'Male'      30.5              17.1     218      39      79    5.5    2.7     0.9    1       
-    32     'Male'      32.6              14.1     219      95     235    5.8    3.1     1.1    1       
-    56     'Male'      17.7               8.8     239      43     185    5.6    2.4     0.7    1       
-    50     'Male'       0.9               0.3     194     190      73    7.5    3.9       1    1       
-    46     'Male'      18.4               8.5     450     119     230    7.5    3.3     0.7    1       
-    46     'Male'        20                10     254     140     540    5.4      3     1.2    1       
-    37     'Female'     0.8               0.2     205      31      36    9.2    4.6       1    2       
-    45     'Male'       2.2               1.6     320      37      48    6.8    3.4       1    1       
-    56     'Male'         1               0.3     195      22      28    5.8    2.6     0.8    2       
-    69     'Male'       0.9               0.2     215      32      24    6.9      3     0.7    1       
-    49     'Male'         1               0.3     230      48      58    8.4    4.2       1    1       
-    49     'Male'       3.9               2.1     189      65     181    6.9      3     0.7    1       
-    60     'Male'       0.9               0.3     168      16      24    6.7      3     0.8    1       
-    28     'Male'       0.9               0.2     215      50      28      8      4       1    1       
-    45     'Male'       2.9               1.4     210      74      68    7.2    3.6       1    1       
-    35     'Male'      26.3              12.1     108     168     630    9.2      2     0.3    1       
-    62     'Male'       1.8               0.9     224      69     155    8.6      4     0.8    1       
-    55     'Male'       4.4               2.9     230      14      25    7.1    2.1     0.4    1       
-    46     'Female'     0.8               0.2     185      24      15    7.9    3.7     0.8    1       
-    50     'Male'       0.6               0.2     137      15      16    4.8    2.6     1.1    1       
-    29     'Male'       0.8               0.2     156      12      15    6.8    3.7     1.1    2       
-    53     'Female'     0.9               0.2     210      35      32      8    3.9     0.9    2       
-    46     'Male'       9.4               5.2     268      21      63    6.4    2.8     0.8    1       
-    40     'Male'       3.5               1.6     298      68     200    7.1    3.4     0.9    1       
-    45     'Male'       1.7               0.8     315      12      38    6.3    2.1     0.5    1       
-    55     'Male'       3.3               1.5     214      54     152    5.1    1.8     0.5    1       
-    22     'Female'     1.1               0.3     138      14      21      7    3.8     1.1    2       
-    40     'Male'      30.8              18.3     285     110     186    7.9    2.7     0.5    1       
-    62     'Male'       0.7               0.2     162      12      17    8.2    3.2     0.6    2       
-    46     'Female'     1.4               0.4     298     509     623    3.6      1     0.3    1       
-    39     'Male'       1.6               0.8     230      88      74      8      4       1    2       
-    60     'Male'      19.6               9.5     466      46      52    6.1      2     0.4    1       
-    46     'Male'      15.8               7.2     227      67     220    6.9    2.6     0.6    1       
-    10     'Female'     0.8               0.1     395      25      75    7.6    3.6     0.9    1       
-    52     'Male'       1.8               0.8      97      85      78    6.4    2.7     0.7    1       
-    65     'Female'     0.7               0.2     406      24      45    7.2    3.5     0.9    2       
-    42     'Male'       0.8               0.2     114      21      23      7      3     0.7    2       
-    42     'Male'       0.8               0.2     198      29      19    6.6      3     0.8    2       
-    62     'Male'       0.7               0.2     173      46      47    7.3    4.1     1.2    2       
-    40     'Male'       1.2               0.6     204      23      27    7.6      4     1.1    1       
-    54     'Female'     5.5               3.2     350      67      42      7    3.2     0.8    1       
-    45     'Female'     0.7               0.2     153      41      42    4.5    2.2     0.9    2       
-    45     'Male'      20.2              11.7     188      47      32    5.4    2.3     0.7    1       
-    50     'Female'    27.7              10.8     380      39     348    7.1    2.3     0.4    1       
-    42     'Male'      11.1               6.1     214      60     186    6.9    2.8     2.8    1       
-    40     'Female'     2.1                 1     768      74     141    7.8    4.9     1.6    1       
-    46     'Male'       3.3               1.5     172      25      41    5.6    2.4     0.7    1       
-    29     'Male'       1.2               0.4     160      20      22    6.2      3     0.9    2       
-    45     'Male'       0.6               0.1     196      29      30    5.8    2.9       1    1       
-    46     'Male'      10.2               4.2     232      58     140      7    2.7     0.6    1       
-    73     'Male'       1.8               0.9     220      20      43    6.5      3     0.8    1       
-    55     'Male'       0.8               0.2     290     139      87      7      3     0.7    1       
-    51     'Male'       0.7               0.1     180      25      27    6.1    3.1       1    1       
-    51     'Male'       2.9               1.2     189      80     125    6.2    3.1       1    1       
-    51     'Male'         4               2.5     275     382     330    7.5      4     1.1    1       
-    26     'Male'      42.8              19.7     390      75     138    7.5    2.6     0.5    1       
-    66     'Male'      15.2               7.7     356     321     562    6.5    2.2     0.4    1       
-    66     'Male'      16.6               7.6     315     233     384    6.9      2     0.4    1       
-    66     'Male'      17.3               8.5     388     173     367    7.8    2.6     0.5    1       
-    64     'Male'       1.4               0.5     298      31      83    7.2    2.6     0.5    1       
-    38     'Female'     0.6               0.1     165      22      34    5.9    2.9     0.9    2       
-    43     'Male'      22.5              11.8     143      22     143    6.6    2.1    0.46    1       
-    50     'Female'       1               0.3     191      22      31    7.8      4       1    2       
-    52     'Male'       2.7               1.4     251      20      40      6    1.7    0.39    1       
-    20     'Female'    16.7               8.4     200      91     101    6.9    3.5    1.02    1       
-    16     'Male'       7.7               4.1     268     213     168    7.1      4     1.2    1       
-    16     'Male'       2.6               1.2     236     131      90    5.4    2.6     0.9    1       
-    90     'Male'       1.1               0.3     215      46     134    6.9      3     0.7    1       
-    32     'Male'      15.6               9.5     134      54     125    5.6      4     2.5    1       
-    32     'Male'       3.7               1.6     612      50      88    6.2    1.9     0.4    1       
-    32     'Male'      12.1                 6     515      48      92    6.6    2.4     0.5    1       
-    32     'Male'        25              13.7     560      41      88    7.9    2.5     2.5    1       
-    32     'Male'        15               8.2     289      58      80    5.3    2.2     0.7    1       
-    32     'Male'      12.7               8.4     190      28      47    5.4    2.6     0.9    1       
-    60     'Male'       0.5               0.1     500      20      34    5.9    1.6    0.37    2       
-    40     'Male'       0.6               0.1      98      35      31      6    3.2     1.1    1       
-    52     'Male'       0.8               0.2     245      48      49    6.4    3.2       1    1       
-    31     'Male'       1.3               0.5     184      29      32    6.8    3.4       1    1       
-    38     'Male'         1               0.3     216      21      24    7.3    4.4     1.5    2       
+    119.99          157.3          74.997          0.00784             7e-05              0.0037     0.00554     0.01109       0.04374         0.426               0.02182          0.0313         0.02971     0.06545        0.02211    21.033    0.41478    0.81529     -4.813     0.26648    2.3014     0.28465    1     
+     122.4         148.65          113.82          0.00968             8e-05             0.00465     0.00696     0.01394       0.06134         0.626               0.03134         0.04518         0.04368     0.09403        0.01929    19.085    0.45836    0.81952    -4.0752     0.33559    2.4869     0.36867    1     
+    116.68         131.11          111.56           0.0105             9e-05             0.00544     0.00781     0.01633       0.05233         0.482               0.02757         0.03858          0.0359      0.0827        0.01309    20.651     0.4299    0.82529    -4.4432     0.31117    2.3423     0.33263    1     
+    116.68         137.87          111.37          0.00997             9e-05             0.00502     0.00698     0.01505       0.05492         0.517               0.02924         0.04005         0.03772     0.08771        0.01353    20.644    0.43497    0.81924    -4.1175     0.33415    2.4056     0.36897    1     
+    116.01         141.78          110.66          0.01284           0.00011             0.00655     0.00908     0.01966       0.06425         0.584                0.0349         0.04825         0.04465      0.1047        0.01767    19.649    0.41736    0.82348    -3.7478     0.23451    2.3322     0.41034    1     
+    120.55         131.16          113.79          0.00968             8e-05             0.00463      0.0075     0.01388       0.04701         0.456               0.02328         0.03526         0.03243     0.06985        0.01222    21.378    0.41556    0.82507    -4.2429     0.29911    2.1876     0.35778    1     
+    120.27         137.24          114.82          0.00333             3e-05             0.00155     0.00202     0.00466       0.01608          0.14               0.00779         0.00937         0.01351     0.02337        0.00607    24.886    0.59604    0.76411    -5.6343     0.25768    1.8548     0.21176    1     
+    107.33         113.84          104.31           0.0029             3e-05             0.00144     0.00182     0.00431       0.01567         0.134               0.00829         0.00946         0.01256     0.02487        0.00344    26.892    0.63742    0.76326    -6.1676     0.18372    2.0647     0.16376    1     
+     95.73         132.07          91.754          0.00551             6e-05             0.00293     0.00332      0.0088       0.02093         0.191               0.01073         0.01277         0.01717     0.03218         0.0107    21.812    0.61555    0.77359    -5.4987     0.32777    2.3225     0.23157    1     
+    95.056          120.1          91.226          0.00532             6e-05             0.00268     0.00332     0.00803       0.02838         0.255               0.01441         0.01725         0.02444     0.04324        0.01022    21.862    0.54704    0.79846    -5.0119       0.326    2.4328     0.27136    1     
+    88.333         112.24          84.072          0.00505             6e-05             0.00254      0.0033     0.00763       0.02143         0.197               0.01079         0.01342         0.01892     0.03237        0.01166    21.118    0.61114    0.77616    -5.2498       0.391    2.4073     0.24974    1     
+    91.904         115.87          86.292           0.0054             6e-05             0.00281     0.00336     0.00844       0.02752         0.249               0.01424         0.01641         0.02214     0.04272        0.01141    21.414    0.58339    0.79252    -4.9602     0.36357    2.6425     0.27593    1     
+    136.93         159.87          131.28          0.00293             2e-05             0.00118     0.00153     0.00355       0.01259         0.112               0.00656         0.00717          0.0114     0.01968        0.00581    25.703     0.4606    0.64685    -6.5471     0.15281    2.0413     0.13851    1     
+    139.17         179.14          76.556           0.0039             3e-05             0.00165     0.00208     0.00496       0.01642         0.154               0.00728         0.00932         0.01797     0.02184        0.01041    24.889    0.43017    0.66583    -5.6602     0.25499    2.5194     0.19989    1     
+    152.84         163.31          75.836          0.00294             2e-05             0.00121     0.00149     0.00364       0.01828         0.158               0.01064         0.00972         0.01246     0.03191        0.00609    24.922    0.47479    0.65403    -6.1051     0.20365    2.1256      0.1701    1     
+    142.17         217.46          83.159          0.00369             3e-05             0.00157     0.00203     0.00471       0.01503         0.126               0.00772         0.00888         0.01359     0.02316        0.00839    25.175    0.56592    0.65824    -5.3401     0.21019    2.2055     0.23459    1     
+    144.19         349.26          82.764          0.00544             4e-05             0.00211     0.00292     0.00632       0.02047         0.192               0.00969           0.012         0.02074     0.02908        0.01859    22.333    0.56738    0.64469      -5.44     0.23976    2.2645     0.21816    1     
+    168.78         232.18          75.603          0.00718             4e-05             0.00284     0.00387     0.00853       0.03327         0.348               0.01441         0.01893          0.0343     0.04322        0.02919    20.376     0.6311    0.60542    -2.9311     0.43433    3.0075     0.43079    1     
+    153.05         175.83          68.623          0.00742             5e-05             0.00364     0.00432     0.01092       0.05517         0.542               0.02471         0.03572         0.05767     0.07413         0.0316     17.28    0.66532    0.71947    -3.9491     0.35787     3.109     0.37743    1     
+    156.41          189.4          142.82          0.00768             5e-05             0.00372     0.00399     0.01116       0.03995         0.348               0.01721         0.02374          0.0431     0.05164        0.03365    17.153    0.64955    0.68608    -4.5545     0.34018    2.8567     0.32211    1     
+    153.85         165.74          65.782           0.0084             5e-05             0.00428      0.0045     0.01285        0.0381         0.328               0.01667         0.02383         0.04055        0.05        0.03871    17.536    0.66012    0.70409    -4.0954     0.26256    2.7397     0.36539    1     
+    153.88         172.86          78.128           0.0048             3e-05             0.00232     0.00267     0.00696       0.04137          0.37               0.02021         0.02591         0.04525     0.06062        0.01849    19.493    0.62902    0.69895     -5.187     0.23762    2.5575     0.25977    1     
+    167.93         193.22          79.068          0.00442             3e-05              0.0022     0.00247     0.00661       0.04351         0.377               0.02228          0.0254         0.04246     0.06685         0.0128    22.468    0.61906    0.67983     -4.331     0.26238    2.9168     0.28569    1     
+    173.92         192.74           86.18          0.00476             3e-05             0.00221     0.00258     0.00663       0.04192         0.364               0.02187          0.0247         0.03772     0.06562         0.0184    20.422    0.53726    0.68689    -5.2488     0.21028    2.5475     0.25356    1     
+    163.66         200.84          76.779          0.00742             5e-05              0.0038      0.0039      0.0114       0.01659         0.164               0.00738         0.00948         0.01497     0.02214        0.01778    23.831    0.39794    0.73248    -5.5574     0.22089    2.6922     0.21596    1     
+     104.4            206          77.968          0.00633             6e-05             0.00316     0.00375     0.00948       0.03767         0.381               0.01732         0.02245          0.0378     0.05197        0.02887    22.066    0.52275    0.73795    -5.5718     0.23685    2.8464     0.21951    1     
+    171.04         208.31          75.501          0.00455             3e-05              0.0025     0.00234      0.0075       0.01966         0.186               0.00889         0.01169         0.01872     0.02666        0.01095    25.908    0.41862    0.72092    -6.1836     0.22628    2.5897      0.1474    1     
+    146.84          208.7          81.737          0.00496             3e-05              0.0025     0.00275     0.00749       0.01919         0.198               0.00883         0.01144         0.01826      0.0265        0.01328    25.119    0.35877    0.72665    -6.2717      0.1961    2.3142       0.163    1     
+    155.36         227.38          80.055           0.0031             2e-05             0.00159     0.00176     0.00476       0.01718         0.161               0.00769         0.01012         0.01661     0.02307        0.00677     25.97    0.47048    0.67626    -7.1209     0.27979    2.2417     0.10851    1     
+    162.57         198.35           77.63          0.00502             3e-05              0.0028     0.00253     0.00841       0.01791         0.168               0.00793         0.01057         0.01799      0.0238         0.0117    25.678    0.42779     0.7238    -6.6357     0.20987     1.958     0.13524    1     
+    197.08          206.9          192.06          0.00289             1e-05             0.00166     0.00168     0.00498       0.01098         0.097               0.00563          0.0068         0.00802     0.01689        0.00339    26.775    0.42223    0.74137    -7.3483     0.17755    1.7439    0.085569    0     
+    199.23         209.51          192.09          0.00241             1e-05             0.00134     0.00138     0.00402       0.01015         0.089               0.00504         0.00641         0.00762     0.01513        0.00167     30.94    0.43244    0.74206    -7.6826     0.17332    2.1031    0.068501    0     
+    198.38          215.2           193.1          0.00212             1e-05             0.00113     0.00135     0.00339       0.01263         0.111                0.0064         0.00825         0.00951     0.01919        0.00119    30.775    0.46595     0.7387    -7.0679     0.17518    1.5123     0.09632    0     
+    202.27          211.6          197.08           0.0018             9e-06             0.00093     0.00107     0.00278       0.00954         0.085               0.00469         0.00606         0.00719     0.01407        0.00072    32.684    0.36854    0.74213    -7.6957     0.17854    1.5446    0.056141    0     
+    203.18         211.53          196.16          0.00178             9e-06             0.00094     0.00106     0.00283       0.00958         0.085               0.00468          0.0061         0.00726     0.01403        0.00065    33.047    0.34007     0.7419     -7.965     0.16352    1.4233    0.044539    0     
+    201.46         210.56          195.71          0.00198             1e-05             0.00105     0.00115     0.00314       0.01194         0.107               0.00586          0.0076         0.00957     0.01758        0.00135    31.732    0.34425    0.74274    -7.7777     0.17018    2.4471     0.05761    0     
+    177.88         192.92          168.01          0.00411             2e-05             0.00233     0.00241       0.007       0.02126         0.189               0.01154         0.01347         0.01612     0.03463        0.00586    23.216    0.36015    0.77883    -6.1497     0.21804    2.4771     0.16583    1     
+    176.17          185.6          163.56          0.00369             2e-05             0.00205     0.00218     0.00616       0.01851         0.168               0.00938          0.0116         0.01491     0.02814         0.0034    24.951    0.34143    0.78363    -6.0064     0.19637    2.5365     0.17322    1     
+     180.2         201.25          175.46          0.00284             2e-05             0.00153     0.00166     0.00459       0.01444         0.131               0.00726         0.00885          0.0119     0.02177        0.00231    26.738    0.40388    0.76621    -6.4521     0.21229    2.2694     0.14193    1     
+    187.73         202.32          173.01          0.00316             2e-05             0.00168     0.00182     0.00504       0.01663         0.151               0.00829         0.01003         0.01366     0.02488        0.00265     26.31    0.39679    0.75832    -6.0066     0.26689    2.3825     0.16069    1     
+    186.16         197.72          177.58          0.00298             2e-05             0.00165     0.00175     0.00496       0.01495         0.135               0.00774         0.00941         0.01233     0.02321        0.00231    26.822    0.32648    0.76562    -6.6474     0.20109    2.3741     0.13055    1     
+    184.06         196.54          166.98          0.00258             1e-05             0.00134     0.00147     0.00403       0.01463         0.132               0.00742         0.00901         0.01234     0.02226        0.00257    26.453    0.30644     0.7592    -7.0441    0.063412    2.3615     0.11573    1     
+    237.23         247.33          225.23          0.00298             1e-05             0.00169     0.00182     0.00507       0.01752         0.164               0.01035         0.01024         0.01133     0.03104         0.0074    22.736    0.30506    0.65417    -7.3106    0.098648    2.4168    0.095032    0     
+     241.4         248.83          232.48          0.00281             1e-05             0.00157     0.00173      0.0047        0.0176         0.154               0.01006         0.01038         0.01251     0.03017        0.00675    23.145     0.4577    0.63427    -6.7935     0.15827    2.2567      0.1174    0     
+    243.44         250.91          232.44           0.0021             9e-06             0.00109     0.00137     0.00327       0.01419         0.126               0.00777         0.00898         0.01033      0.0233        0.00454    25.368     0.4383    0.63528    -7.0579    0.091608    2.3307     0.09147    0     
+    242.85         255.03          227.91          0.00225             9e-06             0.00117     0.00139      0.0035       0.01494         0.134               0.00847         0.00879         0.01014     0.02542        0.00476    25.032    0.43128    0.63893    -6.9958     0.10208    2.3658     0.10271    0     
+    245.51         262.09          231.85          0.00235             1e-05             0.00127     0.00148      0.0038       0.01608         0.141               0.00906         0.00977         0.01149     0.02719        0.00476    24.602    0.46749    0.63165    -7.1561     0.12764    2.3921    0.097336    0     
+    252.46         261.49          182.79          0.00185             7e-06             0.00092     0.00113     0.00276       0.01152         0.103               0.00614          0.0073          0.0086     0.01841        0.00432    26.805    0.61037     0.6352    -7.3195     0.20087    2.0286    0.086398    0     
+    122.19         128.61          115.77          0.00524             4e-05             0.00169     0.00203     0.00507       0.01613         0.143               0.00855         0.00776         0.01433     0.02566        0.00839    23.162     0.5796    0.73366    -6.4394     0.26639    2.0799     0.13387    0     
+    122.96         130.05          114.68          0.00428             3e-05             0.00124     0.00155     0.00373       0.01681         0.154                0.0093         0.00802           0.014     0.02789        0.00462    24.971    0.53869    0.75407    -6.4821     0.26497    2.0544     0.12887    0     
+    124.44         135.07           117.5          0.00431             3e-05             0.00141     0.00167     0.00422       0.02184         0.197               0.01241         0.01024         0.01685     0.03724        0.00479    25.135    0.55313    0.77593    -6.6505      0.2545    1.8402     0.10356    0     
+    126.34         134.23          112.77          0.00448             4e-05             0.00131     0.00169     0.00393       0.02033         0.185               0.01143         0.00959         0.01614     0.03429        0.00474     25.03     0.5075    0.76036    -6.6892     0.29195    2.4319     0.10599    0     
+       128         138.05          122.08          0.00436             3e-05             0.00137     0.00166     0.00411       0.02297          0.21               0.01323         0.01072         0.01677     0.03969        0.00481    24.692    0.45977     0.7662    -7.0724     0.22043    1.9723     0.11931    0     
+    129.34         139.87           118.6           0.0049             4e-05             0.00165     0.00183     0.00495       0.02498         0.228               0.01396         0.01219         0.01947     0.04188        0.00484    25.429    0.42038    0.78571    -6.8368     0.26987    2.2237     0.14749    0     
+    108.81         134.66          102.87          0.00761             7e-05             0.00349     0.00486     0.01046       0.02719         0.255               0.01483         0.01609         0.02067      0.0445        0.01036    21.028    0.53601    0.81903    -4.6496     0.20556    1.9869      0.3167    1     
+    109.86         126.36          104.44          0.00874             8e-05             0.00398     0.00539     0.01193       0.03209         0.307               0.01789         0.01992         0.02454     0.05368         0.0118    20.767    0.55859    0.81184    -4.3335     0.22173    2.0146     0.34483    1     
+    110.42         131.07          103.37          0.00784             7e-05             0.00352     0.00514     0.01056       0.03715         0.334               0.02032         0.02302         0.02802     0.06097        0.00969    21.422    0.54178    0.82136    -4.4385      0.2383    1.9229     0.33504    1     
+    117.27         129.92           110.4          0.00752             6e-05             0.00299     0.00469     0.00898       0.02293         0.221               0.01189         0.01459         0.01948     0.03568        0.00681    22.817    0.53053    0.81776    -4.6083     0.29002    2.0216     0.31446    1     
+    116.88          131.9          108.15          0.00788             7e-05             0.00334     0.00493     0.01003       0.02645         0.265               0.01394         0.01625         0.02137     0.04183        0.00786    22.603    0.54005    0.81343    -4.4768     0.26263     1.827      0.3262    1     
+    114.85         271.31          104.68          0.00867             8e-05             0.00373      0.0052      0.0112       0.03225          0.35               0.01805         0.01974         0.02519     0.05414        0.01143     21.66    0.54797     0.8174    -4.6092     0.22171    1.8317     0.31639    1     
+    209.14         237.49          109.38          0.00282             1e-05             0.00147     0.00152     0.00442       0.01861          0.17               0.00975         0.01258         0.01382     0.02925        0.00871    25.554    0.34179    0.67887    -7.0405    0.066994    2.4608     0.10152    0     
+    223.37         238.99          98.664          0.00264             1e-05             0.00154     0.00151     0.00461       0.01906         0.165               0.01013         0.01296          0.0134     0.03039        0.00301    26.138    0.44798    0.68626    -7.2938    0.086372    2.3216    0.098555    0     
+    222.24         231.34           205.5          0.00266             1e-05             0.00152     0.00144     0.00457       0.01643         0.145               0.00867         0.01108           0.012     0.02602         0.0034    25.856    0.36487     0.6944    -6.9663    0.095882    2.2787     0.10322    0     
+    228.83         234.62          223.63          0.00296             1e-05             0.00175     0.00155     0.00526       0.01644         0.145               0.00882         0.01075         0.01179     0.02647        0.00351    25.964    0.25657     0.6833    -7.2456    0.018689    2.4982    0.093534    0     
+     229.4         252.22          221.16          0.00205             9e-06             0.00114     0.00113     0.00342       0.01457         0.129               0.00769         0.00957         0.01016     0.02308          0.003    26.415    0.27685    0.67364    -7.4963    0.056844     2.003    0.073581    0     
+    228.97         239.54           113.2          0.00238             1e-05             0.00136      0.0014     0.00408       0.01745         0.154               0.00942          0.0116         0.01234     0.02827         0.0042    24.547    0.30543    0.68181    -7.3142    0.006274    2.1186    0.091546    0     
+    140.34         159.77          67.021          0.00817             6e-05              0.0043      0.0044     0.01289       0.03198         0.313                0.0183          0.0181         0.02428      0.0549        0.02183     19.56    0.46014    0.72091    -5.4094     0.22685      2.36     0.22616    1     
+    136.97         166.61          66.004          0.00923             7e-05             0.00507     0.00463      0.0152       0.03111         0.308               0.01638         0.01759         0.02603     0.04914        0.02659    19.979    0.49813    0.72907    -5.3246     0.20566    2.2916     0.22625    1     
+    143.53         162.22          65.809          0.01101             8e-05             0.00647     0.00467     0.01941       0.05384         0.478               0.03152         0.02422         0.03392     0.09455        0.04882    20.338    0.51324    0.73144    -5.8697     0.15181    2.1185     0.18558    1     
+    148.09         162.82          67.343          0.00762             5e-05             0.00467     0.00354       0.014       0.05428         0.497               0.03357         0.02494         0.03635      0.1007        0.02431    21.718    0.48741    0.72731    -6.2611     0.12096    2.1371     0.14196    1     
+    142.73         162.41          65.476          0.00831             6e-05             0.00469     0.00419     0.01407       0.03485         0.365               0.01868         0.01906         0.02949     0.05605        0.02599    20.264    0.48934    0.73039    -5.7209     0.15883    2.2779     0.18083    1     
+    136.36         176.59           65.75          0.00971             7e-05             0.00534     0.00478     0.01601       0.04978         0.483               0.02749         0.02466         0.03736     0.08247        0.03361     18.57     0.5433    0.73323     -5.208     0.22485    2.6423     0.24298    1     
+    120.08         139.71          111.21          0.00405             3e-05              0.0018      0.0022      0.0054       0.01706         0.152               0.00974         0.00925         0.01345     0.02921        0.00442    25.742    0.49595    0.76296    -5.7918     0.32907     2.205     0.18818    1     
+    112.01         588.52          107.02          0.00533             5e-05             0.00268     0.00329     0.00805       0.02448         0.226               0.01373         0.01375         0.01956      0.0412        0.00623    24.178    0.50913    0.78953    -5.3891     0.30664    1.9287     0.22546    1     
+    110.79          128.1          107.32          0.00494             4e-05              0.0026     0.00283      0.0078       0.02442         0.216               0.01432         0.01325         0.01831     0.04295        0.00479    25.438    0.43703    0.81591    -5.3134     0.20186    2.2258     0.24451    1     
+    110.71         122.61          105.01          0.00516             5e-05             0.00277     0.00289     0.00831       0.02215         0.206               0.01284         0.01219         0.01715     0.03851        0.00472    25.197    0.46351    0.80722    -5.4776     0.31507    1.8621     0.22862    1     
+    112.88         148.83          106.98            0.005             4e-05              0.0027     0.00289      0.0081       0.03999          0.35               0.02413         0.02231         0.02704     0.07238        0.00905     23.37    0.48954    0.78998     -5.776     0.34117    2.0079     0.19392    1     
+    110.57         125.39          106.82          0.00462             4e-05             0.00226      0.0028     0.00677       0.02199         0.197               0.01284         0.01199         0.01636     0.03852         0.0042     25.82    0.42948    0.81634     -5.391     0.25057    1.7779     0.23274    1     
+    95.385         102.14          90.264          0.00608             6e-05             0.00331     0.00332     0.00994       0.03202         0.263               0.01803         0.01886         0.02455     0.05408        0.01062    21.875    0.64495    0.77961    -5.1152     0.24949    2.0178     0.26001    1     
+    100.77          115.7          85.545          0.01038            0.0001             0.00622     0.00576     0.01865       0.03121         0.361               0.01773         0.01783         0.02139      0.0532         0.0222      19.2    0.59439    0.79012    -4.9139      0.2657    2.3984     0.27795    1     
+    96.106         108.66           84.51          0.00694             7e-05             0.00389     0.00415     0.01168       0.04024         0.364               0.02266         0.02451         0.02876     0.06799        0.01823    19.055     0.5448    0.77047    -4.4415      0.1551     2.646     0.32798    1     
+    95.605         107.72          87.549          0.00702             7e-05             0.00428     0.00371     0.01283       0.03156         0.296               0.01792         0.01841          0.0219     0.05377        0.01825    19.659    0.57608    0.77875     -5.132     0.21046    2.2326     0.26063    1     
+    100.96         110.02          95.628          0.00606             6e-05             0.00351     0.00348     0.01053       0.02427         0.216               0.01371         0.01421         0.01751     0.04114        0.01237    20.536    0.55461     0.7879    -5.0223     0.14695    2.4283     0.26467    1     
+    98.804         102.31          87.804          0.00432             4e-05             0.00247     0.00258     0.00742       0.02223         0.202               0.01277         0.01343         0.01552     0.03831        0.00882    22.244    0.57664    0.77242    -6.0254    0.078202    2.0536     0.17727    1     
+    176.86         205.56          75.344          0.00747             4e-05             0.00418      0.0042     0.01254       0.04795         0.435               0.02679         0.03022          0.0351     0.08037         0.0547    13.893    0.55649    0.72959    -5.2889     0.34307    3.0993     0.24212    1     
+    180.98         200.12           155.5          0.00406             2e-05              0.0022     0.00244     0.00659       0.03852         0.331               0.02107         0.02493         0.02877     0.06321        0.02782    16.176    0.58357    0.72775    -5.6579      0.3159    3.0983     0.20042    1     
+    178.22         202.45          141.05          0.00321             2e-05             0.00163     0.00194     0.00488       0.03759         0.327               0.02073         0.02415         0.02784     0.06219        0.03151    15.924    0.59871     0.7122    -6.3669     0.33575    2.6543     0.14461    1     
+    176.28         227.38          125.61           0.0052             3e-05             0.00287     0.00312     0.00862       0.06511          0.58               0.03671         0.04159         0.04683     0.11012        0.04824    13.922    0.60287    0.74084    -5.5151     0.29955    3.1366     0.22097    1     
+     173.9         211.35          74.677          0.00448             3e-05             0.00237     0.00254      0.0071       0.06727          0.65               0.03788         0.04254         0.04802     0.11363        0.04214    14.739    0.59937    0.74394    -5.7833     0.29979    3.0071     0.19405    1     
+    179.71         225.93          144.88          0.00709             4e-05             0.00391     0.00419     0.01172       0.04313         0.442               0.02297         0.02768         0.03455     0.06892        0.07223    11.866    0.59095    0.74553    -4.3794     0.37553    3.6712     0.33209    1     
+     166.6         206.01          78.032          0.00742             4e-05             0.00387     0.00453     0.01161        0.0664         0.634                0.0365         0.04282         0.05114     0.10949        0.08725    11.744    0.65341    0.73316     -4.509     0.38923    3.3176     0.30195    1     
+    151.96         163.34          147.23          0.00419             3e-05             0.00224     0.00227     0.00672       0.07959         0.772               0.04421         0.04962          0.0569     0.13262        0.01658    19.664    0.50104    0.71436    -6.4115     0.20716    2.3449     0.13412    1     
+    148.27         164.99           142.3          0.00459             3e-05              0.0025     0.00256      0.0075        0.0419         0.383               0.02383         0.02521         0.03051      0.0715        0.01914     18.78    0.45444     0.7345    -5.9521     0.08784    2.3443     0.18649    1     
+    152.12         161.47          76.596          0.00382             3e-05             0.00191     0.00226     0.00574       0.05925         0.637               0.03341         0.03794         0.04398     0.10024        0.01211    20.969    0.44746    0.69779    -6.1526     0.17352    2.0801     0.16081    1     
+    157.82         172.97          68.401          0.00358             2e-05             0.00196     0.00196     0.00587       0.03716         0.307               0.02062         0.02321         0.02764     0.06185         0.0085    22.219    0.50238    0.71217    -6.2514     0.18806    2.1439     0.16081    1     
+    157.45         163.27           149.6          0.00369             2e-05             0.00201     0.00197     0.00602       0.03272         0.283               0.01813         0.01909         0.02571     0.05439        0.01018    21.693    0.44728    0.70566    -6.2471     0.18053    2.3443     0.16492    1     
+    159.12         168.91          144.81          0.00342             2e-05             0.00178     0.00184     0.00535       0.03381         0.307               0.01806         0.02024         0.02809     0.05417        0.00852    22.663    0.36633    0.69343    -6.4174     0.19463    2.4732     0.15171    1     
+    125.04         143.95          116.19           0.0128            0.0001             0.00743     0.00623     0.02228       0.03886         0.342               0.02135         0.02174         0.03088     0.06406        0.08151    15.338    0.62957    0.71449      -4.02     0.26532    2.6718     0.34062    1     
+    125.79         140.56          96.206          0.01378           0.00011             0.00826     0.00655     0.02478       0.04689         0.422               0.02542          0.0263         0.03908     0.07625        0.10323    15.433    0.57101    0.69089    -5.1592     0.20215    2.4416     0.26038    1     
+    126.51         141.76           99.77          0.01936           0.00015             0.01159      0.0099     0.03476       0.06734         0.659               0.03611         0.03963         0.05783     0.10833        0.16744    12.435    0.63855    0.67495    -3.7603     0.24286    2.6346     0.37848    1     
+    125.64         141.07          116.35          0.03316           0.00026             0.02144     0.01522     0.06433       0.09178         0.891               0.05358         0.04791         0.06196     0.16074        0.31482     8.867     0.6713    0.65685    -3.7005     0.26048    2.9911     0.37096    1     
+    128.45         150.45          75.632          0.01551           0.00012             0.00905     0.00909     0.02716        0.0617         0.584               0.03223         0.03672         0.05174     0.09669        0.11843     15.06    0.63981    0.64333    -4.2027     0.31016    2.6383     0.35688    1     
+    139.22         586.57          66.157          0.03011           0.00022             0.01854     0.01628     0.05563       0.09419          0.93               0.05551         0.05005         0.06023     0.16654         0.2593    10.489    0.59636    0.64142    -3.2695     0.27064    2.6909     0.44477    1     
+    150.26         154.61          75.349          0.00248             2e-05             0.00105     0.00136     0.00315       0.01131         0.107               0.00522         0.00659         0.01009     0.01567        0.00495    26.759    0.29689    0.72236    -6.8784    0.089267    2.0041     0.11394    1     
+       154         160.27          128.62          0.00183             1e-05             0.00076       0.001     0.00229        0.0103         0.094               0.00469         0.00582         0.00871     0.01406        0.00243    28.409    0.26365    0.69148    -7.1116     0.14478    2.0655    0.093193    1     
+    149.69         160.37          133.61          0.00257             2e-05             0.00116     0.00134     0.00349       0.01346         0.126                0.0066         0.00818         0.01059     0.01979        0.00578    27.421    0.36549    0.71997    -6.9974     0.21028    1.9944     0.11288    1     
+    155.08         163.74          144.15          0.00168             1e-05             0.00068     0.00092     0.00204       0.01064         0.097               0.00522         0.00632         0.00928     0.01567        0.00233    29.746    0.33417    0.67793    -6.9812     0.18455    2.1299      0.1068    1     
+    151.88         157.76          133.75          0.00258             2e-05             0.00115     0.00122     0.00346        0.0145         0.137               0.00633         0.00788         0.01267     0.01898        0.00659    26.833    0.39356    0.70025       -6.6     0.24917    2.4991     0.10531    1     
+    151.99         157.34          132.86          0.00174             1e-05             0.00075     0.00096     0.00225       0.01024         0.093               0.00455         0.00576         0.00993     0.01364        0.00238    29.928    0.31137    0.67607    -6.7392     0.16069    2.2969     0.11513    1     
+    193.03          208.9          80.297          0.00766             4e-05              0.0045     0.00389     0.01351       0.03044         0.275               0.01771         0.01815         0.02084     0.05312        0.00947    21.934    0.49755    0.74054    -5.8451     0.27868    2.6087     0.18567    1     
+    200.71         223.98          89.686          0.00621             3e-05             0.00371     0.00337     0.01112       0.02286         0.207               0.01192         0.01439         0.01852     0.03576        0.00704    23.239    0.43608    0.72786    -5.2583     0.25645     2.551     0.23252    1     
+    208.52         220.31          199.02          0.00609             3e-05             0.00368     0.00339     0.01105       0.01761         0.155               0.00952         0.01058         0.01307     0.02855         0.0083    22.407     0.3381    0.71247    -6.4714     0.18438    2.5023     0.13639    1     
+    204.66          221.3          189.62          0.00841             4e-05             0.00502     0.00485     0.01506       0.02378          0.21               0.01277         0.01483         0.01767     0.03831        0.01316    21.305    0.49888    0.72208    -4.8763     0.21205    2.3767     0.26814    1     
+    210.14         232.71          185.26          0.00534             3e-05             0.00321      0.0028     0.00964        0.0168         0.149               0.00861         0.01017         0.01301     0.02583         0.0062    23.671     0.4411    0.72225     -5.963     0.25028    2.4892     0.17781    1     
+    206.33         226.35           92.02          0.00495             2e-05             0.00302     0.00246     0.00905       0.02105         0.209               0.01107         0.01284         0.01604      0.0332        0.01048    21.864    0.33151    0.71512    -6.7297      0.1817    2.9381     0.11552    1     
+    151.87         492.89          69.085          0.00856             6e-05             0.00404     0.00385     0.01211       0.01843         0.235               0.00796         0.00832         0.01271     0.02389        0.06051    23.693     0.4077    0.66267    -4.6732     0.26155    2.7024     0.27441    1     
+    158.22         442.56          71.948          0.00476             3e-05             0.00214     0.00207     0.00642       0.01458         0.148               0.00606         0.00747         0.01312     0.01818        0.01554    26.356     0.4508    0.65382    -6.0512     0.27328    2.6408     0.17011    1     
+    170.76         450.25          79.032          0.00555             3e-05             0.00244     0.00261     0.00731       0.01725         0.175               0.00757         0.00971         0.01652      0.0227        0.01802     25.69    0.48674    0.67602    -4.5978     0.37211    2.9759     0.28278    1     
+    178.28         442.82          82.063          0.00462             3e-05             0.00157     0.00194     0.00472       0.01279         0.129               0.00617         0.00744         0.01151     0.01851        0.00856     25.02    0.47042    0.65524    -4.9131     0.39306    2.8168     0.25197    1     
+    217.12         233.48          93.978          0.00404             2e-05             0.00127     0.00128     0.00381       0.01299         0.124               0.00679         0.00631         0.01075     0.02038        0.00681    24.581    0.46252    0.58271    -5.5172      0.3893    2.9259     0.22066    1     
+    128.94          479.7          88.251          0.00581             5e-05             0.00241     0.00314     0.00723       0.02008         0.221               0.00849         0.01117         0.01734     0.02548         0.0235    24.743    0.48776    0.68413    -6.1861     0.27993    2.6862     0.15243    1     
+    176.82         215.29          83.961           0.0046             3e-05             0.00209     0.00221     0.00628       0.01169         0.117               0.00534          0.0063         0.01104     0.01603        0.01161    27.166    0.40009    0.65618     -4.711     0.28162    2.6557     0.23481    1     
+    138.19         203.52           83.34          0.00704             5e-05             0.00406     0.00398     0.01218       0.04479         0.441               0.02587         0.02567          0.0322     0.07761        0.01968    18.305    0.53802    0.74148    -5.4188     0.16027    2.0904     0.22989    1     
+    182.02         197.17          79.187          0.00842             5e-05             0.00506     0.00449     0.01517       0.02503         0.231               0.01372          0.0158         0.01931     0.04115        0.01813    18.784    0.58996     0.7329    -5.4451     0.14247    2.1743     0.21556    1     
+    156.24         195.11           79.82          0.00694             4e-05             0.00403     0.00395     0.01209       0.02343         0.224               0.01289          0.0142          0.0172     0.03867         0.0202    19.196    0.61866    0.72842    -5.9442     0.14336    1.9297     0.18199    1     
+    145.17         198.11          80.637          0.00733             5e-05             0.00414     0.00422     0.01242       0.02362         0.233               0.01235         0.01495         0.01944     0.03706        0.01874    18.857    0.63752    0.73555    -5.5943     0.12795     1.766     0.22272    1     
+    138.15         197.24          81.114          0.00544             4e-05             0.00294     0.00327     0.00883       0.02791         0.246               0.01484         0.01805         0.02259     0.04451        0.01794    18.178    0.62321    0.73825    -5.5404    0.087165    1.8213     0.21407    1     
+    166.89         198.97          79.512          0.00638             4e-05             0.00368     0.00351     0.01104       0.02857         0.257               0.01547         0.01859         0.02301     0.04641        0.01796     18.33    0.58517    0.73696    -5.8253      0.1157    1.9961     0.19653    1     
+    119.03         127.53          109.22           0.0044             4e-05             0.00214     0.00192     0.00641       0.01033         0.098               0.00538          0.0057         0.00811     0.01614        0.01724    26.842    0.45754    0.69979      -6.89     0.15294    2.3285     0.11286    1     
+    120.08         126.63          105.67           0.0027             2e-05             0.00116     0.00135     0.00349       0.01022          0.09               0.00476         0.00588         0.00903     0.01428        0.00487    26.369    0.49134    0.71884    -5.8921     0.19598    2.1089     0.18357    1     
+    120.29         128.14          100.21          0.00492             4e-05             0.00269     0.00238     0.00808       0.01412         0.125               0.00703          0.0082         0.01194      0.0211         0.0161    23.949    0.46716    0.72405    -6.1353     0.20363    2.5397     0.16992    1     
+    120.26         125.31          104.77          0.00407             3e-05             0.00224     0.00205     0.00671       0.01516         0.138               0.00721         0.00815          0.0131     0.02164        0.01015    26.017    0.46862    0.73514    -6.1127     0.21701    2.5277     0.17063    1     
+    119.06         125.21          86.795          0.00346             3e-05             0.00169      0.0017     0.00508       0.01201         0.106               0.00633         0.00701         0.00915     0.01898        0.00903    23.389    0.47097    0.72131    -5.4361     0.25491    2.5163     0.23221    1     
+    118.75         123.72          109.84          0.00331             3e-05             0.00168     0.00171     0.00504       0.01043         0.099                0.0049         0.00621         0.00903     0.01471        0.00504    25.619     0.4823     0.7231    -6.4481     0.17871    2.0348     0.14142    1     
+    106.52         112.78          93.105          0.00589             6e-05             0.00291     0.00319     0.00873       0.04932         0.441               0.02683         0.03112         0.03651      0.0805        0.03031     17.06    0.63781    0.74406    -5.3013     0.32038    2.3751     0.24308    1     
+    110.45         127.61          105.55          0.00494             4e-05             0.00244     0.00315     0.00731       0.04128         0.379               0.02229         0.02592         0.03316     0.06688        0.02529    17.707    0.65343    0.70669    -5.3336     0.32204    2.6318     0.22832    1     
+     113.4         133.34          107.82          0.00451             4e-05             0.00219     0.00283     0.00658       0.04879         0.431               0.02385         0.02973          0.0437     0.07154        0.02278    19.013     0.6479    0.70814    -4.3789     0.30007    2.4455     0.25945    1     
+    113.17         130.27          100.67          0.00502             4e-05             0.00257     0.00312     0.00772       0.05279         0.476               0.02896         0.03347         0.04134     0.08689         0.0369    16.747    0.62536    0.70862    -4.6549     0.30411    2.6724     0.27439    1     
+    112.24         126.61          104.09          0.00472             4e-05             0.00238      0.0029     0.00715       0.05643         0.517                0.0307          0.0353         0.04451     0.09211        0.02629    17.366    0.64094     0.7014    -5.6346     0.30601    2.4193     0.20919    1     
+    116.15         131.73          109.81          0.00381             3e-05             0.00181     0.00232     0.00542       0.03026         0.267               0.01514         0.01812          0.0277     0.04543        0.01827    18.801    0.62481    0.69605    -5.8664     0.23307    2.4456     0.18499    1     
+    170.37          268.8          79.543          0.00571             3e-05             0.00232     0.00269     0.00696       0.03273         0.281               0.01713         0.01964         0.02824     0.05139        0.02485     18.54    0.67713    0.68506    -4.7968     0.39775    2.9638     0.27723    1     
+    208.08         253.79          91.802          0.00757             4e-05             0.00428     0.00428     0.01285       0.06725         0.571               0.04016         0.04003         0.04464     0.12047        0.04238    15.648    0.60634    0.66595    -5.4103     0.28892    2.6651     0.23172    1     
+    198.46         219.29          148.69          0.00376             2e-05             0.00182     0.00215     0.00546       0.03527         0.297               0.02055         0.02076          0.0253     0.06165        0.01728    18.702    0.60627    0.66173    -5.5853     0.31075    2.4655     0.20986    1     
+    202.81         231.51          86.232           0.0037             2e-05             0.00189     0.00211     0.00568       0.01997          0.18               0.01117         0.01177         0.01506      0.0335         0.0201    18.687     0.5361    0.63263    -5.8987     0.21335    2.4707     0.18903    1     
+    202.54         241.35          164.17          0.00254             1e-05               0.001     0.00133     0.00301       0.02662         0.228               0.01475         0.01558         0.02006     0.04426        0.01049     20.68    0.49748    0.63041    -6.1327     0.22062    2.5766     0.15978    1     
+    223.36         263.87          87.638          0.00352             2e-05             0.00169     0.00188     0.00506       0.02536         0.225               0.01379         0.01478         0.01909     0.04137        0.01493    20.366    0.56685    0.57428    -5.4568     0.34524    2.8406     0.23286    1     
+    169.77         191.76          151.45          0.01568             9e-05             0.00863     0.00946     0.02589       0.08143         0.821               0.03804         0.05426         0.08808     0.11411         0.0753    12.359    0.56161    0.79351    -3.2977     0.41476    3.4136     0.45753    1     
+    183.52         216.81          161.34          0.01466             8e-05             0.00849     0.00819     0.02546        0.0605         0.618               0.02865         0.04101         0.06359     0.08595        0.06057    14.367    0.47802    0.76897    -4.2766     0.35574    3.1424     0.33609    1     
+    188.62          216.3          165.98          0.01719             9e-05             0.00996     0.01027     0.02987       0.07118         0.722               0.03474          0.0458         0.06824     0.10422        0.08069    12.298    0.55287    0.76404    -3.3773     0.33536    3.2749     0.41865    1     
+    202.63         565.74          177.26          0.01627             8e-05             0.00919     0.00963     0.02756        0.0717         0.833               0.03515         0.04265          0.0646     0.10546        0.07889    14.989    0.42763    0.77571    -4.8925     0.26228    2.9102     0.27017    1     
+    186.69         211.96          149.44          0.01872            0.0001             0.01075     0.01154     0.03225        0.0583         0.784               0.02699         0.03714         0.06259     0.08096        0.10952    12.529    0.50783    0.76273    -4.4843     0.34026    2.9588     0.30149    1     
+    192.82         224.43          168.79          0.03107           0.00016               0.018     0.01958     0.05401       0.11908         1.302               0.05647          0.0794         0.13778     0.16942        0.21713     8.441    0.62587    0.76832     -2.434     0.45049    3.0792     0.52737    1     
+    198.12          233.1          174.48          0.02714           0.00014             0.01568     0.01699     0.04705       0.08684         1.018               0.04284         0.05556         0.08318     0.12851        0.16265     9.449    0.58416    0.75445    -2.8398     0.35622     3.184     0.45472    1     
+    121.34         139.64           98.25          0.00684             6e-05             0.00388     0.00332     0.01164       0.02534         0.241                0.0134         0.01399         0.02056     0.04019        0.04179     21.52    0.56687    0.67048    -4.8652      0.2464    2.0135     0.16858    1     
+     119.1         128.44          88.833          0.00692             6e-05             0.00393       0.003     0.01179       0.02682         0.236               0.01484         0.01405         0.02018     0.04451        0.04611    21.824    0.65168    0.65933     -4.239     0.17569    2.4511     0.24746    1     
+    117.87         127.35          95.654          0.00647             5e-05             0.00356       0.003     0.01067       0.03087         0.276               0.01659         0.01804         0.02402     0.04977        0.02631    22.431     0.6283    0.65202    -3.5837     0.20791    2.4396     0.20626    1     
+    122.34         142.37          94.794          0.00727             6e-05             0.00415     0.00339     0.01246       0.02293         0.223               0.01205         0.01289         0.01771     0.03615        0.03191    22.953    0.61168    0.62373    -5.4351     0.23053    2.6996     0.22055    1     
+    117.96         134.21          100.76          0.01813           0.00015             0.01117     0.00718     0.03351       0.04912         0.438                0.0261         0.02161         0.02916      0.0783        0.10748    19.075    0.63055    0.64679    -3.4445     0.30321    2.9646     0.26131    1     
+    126.14         154.28          97.543          0.00975             8e-05             0.00593     0.00454     0.01778       0.02852         0.266                 0.015         0.01581         0.02157     0.04499        0.03828    21.534    0.63501    0.62734    -5.0701     0.28009    2.8923      0.2497    1     
+    127.93         138.75          112.17          0.00605             5e-05             0.00321     0.00318     0.00962       0.03235         0.339                0.0136          0.0165         0.03105     0.04079        0.02663    19.651    0.65494    0.67587    -5.4985      0.2342     2.103     0.21664    1     
+    114.24         124.39          77.022          0.00581             5e-05             0.00299     0.00316     0.00896       0.04009         0.406               0.01579         0.01994         0.04114     0.04736        0.02073    20.437    0.65314    0.69457     -5.186     0.25923    2.1511     0.24495    1     
+    115.32         135.74           107.8          0.00619             5e-05             0.00352     0.00329     0.01057       0.03273         0.325               0.01644         0.01722         0.02931     0.04933         0.0281    19.388     0.5778    0.68437     -5.283     0.22653    2.4429     0.23828    1     
+    114.55         126.78          91.121          0.00651             6e-05             0.00366      0.0034     0.01097       0.03658         0.369               0.01864          0.0194         0.03091     0.05592        0.02707    18.954    0.68515    0.71958    -5.5298     0.24275    2.4087     0.22052    1     
+    112.15         131.67          97.527          0.00519             5e-05             0.00291     0.00284     0.00873       0.01756         0.155               0.00967         0.01033         0.01363     0.02902        0.01435    21.219    0.55705    0.67309    -5.6171      0.1849    1.8719     0.21239    1     
+    102.27         142.83          85.902          0.00907             9e-05             0.00493     0.00461      0.0148       0.02814         0.272               0.01579         0.01553         0.02073     0.04736        0.03882    18.447    0.67138    0.67456    -2.9294     0.39675    2.5604     0.36723    1     
+     236.2         244.66          102.14          0.00277             1e-05             0.00154     0.00153     0.00462       0.02448         0.217                0.0141         0.01426         0.01621     0.04231         0.0062    24.078    0.46993    0.62823    -6.8161     0.17227    2.2352     0.11965    0     
+    237.32         243.71          229.26          0.00303             1e-05             0.00173     0.00159     0.00519       0.01242         0.116               0.00696         0.00747         0.00882     0.02089        0.00533    24.679    0.38487    0.62671    -7.0181     0.17632    1.8524    0.091604    0     
+    260.11         264.92           237.3          0.00339             1e-05             0.00205     0.00186     0.00616        0.0203         0.197               0.01186          0.0123         0.01367     0.03557         0.0091    21.083    0.44099    0.62806    -7.5179     0.16041    1.8818    0.075587    0     
+    197.57         217.63          90.794          0.00803             4e-05              0.0049     0.00448      0.0147       0.02177         0.189               0.01279         0.01272         0.01439     0.03836        0.01337    19.269    0.37222    0.72522    -5.7368     0.16453    2.8824     0.20288    0     
+     240.3         245.13          219.78          0.00517             2e-05             0.00316     0.00283     0.00949       0.02018         0.212               0.01176         0.01191         0.01344     0.03529        0.00965     21.02    0.37184    0.64617    -7.1697    0.073298    2.2664     0.10088    0     
+    244.99         272.21          239.17          0.00451             2e-05             0.00279     0.00237     0.00837       0.01897         0.181               0.01084         0.01121         0.01255     0.03253        0.01049    21.528    0.52281    0.64682    -7.3045     0.17109    2.0952     0.09622    0     
+    112.55         133.37          105.72          0.00355             3e-05             0.00166      0.0019     0.00499       0.01358         0.129               0.00664         0.00786          0.0114     0.01992        0.00435    26.436     0.4133     0.7567    -6.3235     0.21888    2.1934     0.16038    0     
+    110.74          113.6          100.14          0.00356             3e-05              0.0017       0.002      0.0051       0.01484         0.133               0.00754          0.0095         0.01285     0.02261         0.0043     26.55    0.36909    0.77616    -6.0856     0.19237     1.889     0.17415    0     
+    113.72         116.44          96.913          0.00349             3e-05             0.00171     0.00203     0.00514       0.01472         0.133               0.00748         0.00905         0.01148     0.02245        0.00478    26.547    0.38025     0.7667    -5.9435     0.19215    1.8525     0.17968    0     
+       117         144.47          99.923          0.00353             3e-05             0.00176     0.00218     0.00528       0.01657         0.145               0.00881         0.01062         0.01318     0.02643         0.0059    25.445    0.38748    0.75648    -6.0126      0.2293    1.8729     0.16312    0     
+    115.38         123.11          108.63          0.00332             3e-05              0.0016     0.00199      0.0048       0.01503         0.137               0.00812         0.00933         0.01133     0.02436        0.00401    26.005    0.40599    0.76126    -5.9668     0.19794    1.9749     0.18407    0     
+    116.39         129.04          108.97          0.00346             3e-05             0.00169     0.00213     0.00507       0.01725         0.155               0.00874         0.01021         0.01331     0.02623        0.00415    26.143    0.36123    0.76324    -6.0169     0.10926    2.0047     0.17443    0     
+    151.74          190.2          129.86          0.00314             2e-05             0.00135     0.00162     0.00406       0.01469         0.132               0.00728         0.00886          0.0123     0.02184         0.0057    24.151    0.39661    0.74596    -6.4868     0.19792    2.4498      0.1327    1     
+    148.79         158.36          138.99          0.00309             2e-05             0.00152     0.00186     0.00456       0.01574         0.142               0.00839         0.00956         0.01309     0.02518        0.00488    24.412    0.40259    0.76251     -6.312     0.18246    2.2516     0.16031    1     
+    148.14         155.98          135.04          0.00392             3e-05             0.00204     0.00231     0.00612        0.0145         0.131               0.00725         0.00876         0.01263     0.02175         0.0054    23.683     0.3985    0.77835    -5.7112     0.24088    2.8451     0.19273    1     
+    150.44         163.44          144.74          0.00396             3e-05             0.00206     0.00233     0.00619       0.02551         0.237               0.01321         0.01574         0.02148     0.03964        0.00611    23.133     0.3524    0.75932    -6.2614     0.18322    2.2642     0.14411    1     
+    148.46         161.08             142          0.00397             3e-05             0.00202     0.00235     0.00605       0.01831         0.163                0.0095         0.01103         0.01559     0.02849        0.00639    22.866     0.4086    0.76885    -5.7041      0.2162    2.6792     0.19771    1     
+    149.82         163.42          144.79          0.00336             2e-05             0.00174     0.00198     0.00521       0.02145         0.198               0.01155         0.01341         0.01666     0.03464        0.00595    23.008    0.32958    0.75718    -6.2772      0.1094     2.209     0.15637    1     
+    117.23         123.92          106.66          0.00417             4e-05             0.00186      0.0027     0.00558       0.01909         0.171               0.00864         0.01223         0.01949     0.02592        0.00955    23.079    0.60352    0.66956    -5.6191     0.19158    2.0272     0.21572    0     
+    116.85         217.55          99.503          0.00531             5e-05              0.0026     0.00346      0.0078       0.01795         0.163                0.0081         0.01144         0.01756     0.02429        0.01179    22.085    0.66384    0.65652    -5.1989     0.20677    2.1204      0.2524    0     
+    116.29         177.29          96.983          0.00314             3e-05             0.00134     0.00192     0.00403       0.01564         0.136               0.00667          0.0099         0.01691     0.02001        0.00737    24.199    0.59852    0.65433    -5.5926     0.13392    2.0587     0.21435    0     
+    116.56         592.03          86.228          0.00496             4e-05             0.00254     0.00263     0.00762        0.0166         0.154                0.0082         0.00972         0.01491      0.0246        0.01397    23.958    0.56642    0.66765    -6.4311     0.15331    2.1619     0.12061    0     
+    116.34         581.29          94.246          0.00267             2e-05             0.00115     0.00148     0.00345         0.013         0.117               0.00631         0.00789         0.01144     0.01892         0.0068    25.023    0.52848    0.66388     -6.359     0.11664    2.1521     0.13887    0     
+    114.56         119.17          86.647          0.00327             3e-05             0.00146     0.00184     0.00439       0.01185         0.106               0.00557         0.00721         0.01095     0.01672        0.00703    24.775     0.5553    0.65913    -6.7102     0.14969     1.914     0.12178    0     
+    201.77         262.71          78.228          0.00694             3e-05             0.00412     0.00396     0.01235       0.02574         0.255               0.01454         0.01582         0.01758     0.04363        0.04441    19.368    0.50848    0.68376    -6.9345     0.15989    2.3163     0.11284    0     
+    174.19         230.98          94.261          0.00459             3e-05             0.00263     0.00259      0.0079       0.04087         0.405               0.02336         0.02498         0.02745     0.07008        0.02764    19.517    0.44844     0.6579    -6.5386     0.12195    2.6575     0.13305    0     
+    209.52         253.02          89.488          0.00564             3e-05             0.00331     0.00292     0.00994       0.02751         0.263               0.01604         0.01657         0.01879     0.04812         0.0181    19.147    0.43167    0.68324    -6.1953      0.1293    2.7843     0.16889    0     
+    174.69            240          74.287           0.0136             8e-05             0.00624     0.00564     0.01873       0.02308         0.256               0.01268         0.01365         0.01667     0.03804        0.10715    17.883    0.40757    0.65568    -6.7872     0.15845    2.6798     0.13173    0     
+    198.76         396.96          74.904           0.0074             4e-05              0.0037      0.0039     0.01109       0.02296         0.241               0.01265         0.01321         0.01588     0.03794        0.07223     19.02    0.45122    0.64396    -6.7446     0.20745    2.1386     0.12331    0     
+    214.29         260.28          77.973          0.00567             3e-05             0.0  
