@@ -2,8 +2,7 @@
  • The full dataset is composed of 195 points with 22 covariates. It is detailed below : 
 
 
- MDVP_Fo_Hz_    MDVP_Fhi_Hz_    MDVP_Flo_Hz_    MDVP_Jitter___    MDVP_Jitter_Abs_    MDVP_RAP    MDVP_PPQ    Jitter_DDP    MDVP_Shimmer    MDVP_Shimmer_dB_    Shimmer_APQ3    Shimmer_APQ5    MDVP_APQ    Shimmer_DDA      NHR       HNR       RPDE        DFA      spread1    spread2       D2        PPE       status
-    ___________    ____________    ____________    ______________    ________________    ________    ________    __________    ____________    ________________    ____________    ____________    ________    ___________    _______    ______    _______    _______    _______    ________    ______    ________    ______
+ MDVP_Fo_Hz	MDVP_Fhi_Hz	MDVP_Flo_Hz	 MDVP_Jitter	 MDVP_Jitter_Abs	MDVP_RAP    MDVP_PPQ    Jitter_DDP    MDVP_Shimmer    MDVP_Shimmer_dB	Shimmer_APQ3    Shimmer_APQ5    MDVP_APQ	Shimmer_DDA	NHR	HNR       RPDE        DFA      spread1    spread2       D2        PPE       status
 
     119.99          157.3          74.997          0.00784             7e-05              0.0037     0.00554     0.01109       0.04374         0.426               0.02182          0.0313         0.02971     0.06545        0.02211    21.033    0.41478    0.81529     -4.813     0.26648    2.3014     0.28465    1     
      122.4         148.65          113.82          0.00968             8e-05             0.00465     0.00696     0.01394       0.06134         0.626               0.03134         0.04518         0.04368     0.09403        0.01929    19.085    0.45836    0.81952    -4.0752     0.33559    2.4869     0.36867    1     
