@@ -1,15 +1,17 @@
-function [wMap,Sn] = laplax(ds, is)
+function [wMap,Sn] = laplax(ds, is, prior)
 % <============ HEADER =============>
 % @brief    : computes the posterior approximation with Laplace
 %             approximation
 %             feature space is input space 
 % @params   : ds <- dataset
 %             is <- input vectors dimensionality
+%             prior <- {mean,covariance matrix} structure -- assuming
+%                       Gaussian prior for now 
 % @returns  : posterior distribution q
 % <============ HEADER =============>
 
-mo = zeros(is+1,1);
-So = 100*eye(is+1);% + double([1:is+1]==11)'*double([1:is+1]==11) + double([1:is+1]==14)'*double([1:is+1]==14);
+mo = prior.mean;
+So = prior.covmat;
 prior = gaussianDb(is,mo,So); % start with centered Gaussian prior 
 outp  = @(w) compute_output('logistic_sigmoid',w(1:is),w(is+1),ds(:,1:is),'linear');
 
