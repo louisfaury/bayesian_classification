@@ -36,10 +36,10 @@ ds = readtable(strcat(dataset_name,'.csv'));
 % - - - - - - - - - - - - - - - - - -
 % laplace approximation for posterior
 % - - - - - - - - - - - - - - - - - -
- [w,S] = laplax(ds,is);
+% [w,S] = laplax(ds,is);
 % opt.laplax = struct('name','Laplace approximation');
 % visualize_solution(w(1:is), ds, is, 1, opt.laplax);    % Basic visualization 
- visualize_pdb(ds,w,S,is)                                 % Visualization  TODO 
+% visualize_pdb(ds,w,S,is)                                 % Visualization  TODO 
 % - - - - - - - - - - - - - - - - - -
 % grid based posterior 
 % - - - - - - - - - - - - - - - - - -
@@ -50,12 +50,11 @@ ds = readtable(strcat(dataset_name,'.csv'));
 
 
 %% F-fold CV  
-fold = 50;
+fold = 100;
 % irls cross-validation 
 % ---------------------------
 irls_cv(ds, is, fold);
 % bayesian cross-validation
 % ---------------------------
-% TODO : use predictive distribution for guess - see how it improves ! 
 
 
