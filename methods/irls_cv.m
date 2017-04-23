@@ -55,8 +55,9 @@ ylabel('F-measure statistics');
 title('10-fold cross validation using F-measure');
 
 subplot(1,2,2); 
+colors = jet(n+1);
 for i = 1:n+1
-    plot(roc_points(i,2),roc_points(i,1),'o','MarkerSize',20,'MarkerEdgeColor',[rand rand rand], 'MarkerFaceColor',[rand rand rand]); hold on;
+    plot(roc_points(i,2),roc_points(i,1),'o','MarkerSize',20, 'MarkerFaceColor',colors(i,:)); hold on;
 end
 
 axis([0 1 0 1]);
