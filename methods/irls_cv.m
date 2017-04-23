@@ -52,7 +52,7 @@ figure('units','normalized','outerposition',[0 0 1 1])
 subplot(1,2,1); boxplot(f_measures','Labels',{'IRLS','RIDGE : 0.01','RIDGE = 0.1','RIDGE = 1','Laplace'});
 xlabel('Method');
 ylabel('F-measure statistics');
-title('10-fold cross validation using F-measure');
+title(strcat(num2str(fold),'-fold cross validation using F-measure'));
 
 subplot(1,2,2); 
 colors = jet(n+1);
