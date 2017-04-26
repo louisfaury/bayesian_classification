@@ -43,7 +43,7 @@ laplax_prior.mean = zeros(is+1,1);
 laplax_prior.covmat = 1000*eye(is+1)+ 10*double([1:is+1]==11)'*double([1:is+1]==11) + 10*double([1:is+1]==14)'*double([1:is+1]==14);
 for f=1:fold
     [train_set,test_sest] = sample_train_test(dataset,tt_ratio);
-    [w,~] = laplax(train_set,is,laplax_prior);
+    [w,~] = laplax_normal(train_set,is,laplax_prior);
     [fmeasure, roc] = cv_binary_classification(w, test_sest, 1, is);
     f_measures(iter,f) = fmeasure;
     roc_points(iter,:) = roc_points(iter,:) + [roc.TP,roc.FP]/fold;
@@ -53,7 +53,7 @@ laplax_prior.covmat = 10*eye(is+1);
 iter = iter+1;
 for f=1:fold
     [train_set,test_sest] = sample_train_test(dataset,tt_ratio);
-    [w,~] = laplax(train_set,is,laplax_prior);
+    [w,~] = laplax_normal(train_set,is,laplax_prior);
     [fmeasure, roc] = cv_binary_classification(w, test_sest, 1, is);
     f_measures(iter,f) = fmeasure;
     roc_points(iter,:) = roc_points(iter,:) + [roc.TP,roc.FP]/fold;

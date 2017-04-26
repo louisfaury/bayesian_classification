@@ -18,16 +18,16 @@ ds = readtable(strcat(dataset_name,'.csv'));
 
 
 %% data visualization 
-% visualize_data(ds, is);
+visualize_data(ds, is);
 
 
 %% solution vizualisation
 % IRLS solution vizualisation 
 % ---------------------------
 % opt_up = struct('name','unpenalized','hp',[]);     % unpenalized IRLS
-% opt_L1 = struct('name','L1','hp',10);               % LASSO penalization
-% opt_L2 = struct('name','L2','hp',10);              % RIDGE penalization
-% opt = opt_up;
+% opt_L1 = struct('name','L1','hp',0.01);               % LASSO penalization
+% opt_L2 = struct('name','L2','hp',1);              % RIDGE penalization
+% opt = opt_L1;
 % [w, prior, lc] = irls(ds, is, opt); 
 % visualize_solution(w(1:is), ds, is, lc, opt);
 % ---------------------------
@@ -36,10 +36,10 @@ ds = readtable(strcat(dataset_name,'.csv'));
 % - - - - - - - - - - - - - - - - - -
 % laplace approximation for posterior
 % - - - - - - - - - - - - - - - - - -
-% [w,S] = laplax(ds,is);
-% opt.laplax = struct('name','Laplace approximation');
-% visualize_solution(w(1:is), ds, is, 1, opt.laplax);    % Basic visualization 
-% visualize_pdb(ds,w,S,is)                                 % Visualization  TODO 
+% laplax_prior.mean = zeros(is+1,1);
+% laplax_prior.covmat = 10*eye(is+1);%+ 10*double([1:is+1]==11)'*double([1:is+1]==11) + 10*double([1:is+1]==14)'*double([1:is+1]==14);
+% [w,S] = laplax_normal(ds,is,laplax_prior);
+% visualize_pdb(ds,w,S,is)                  % Visualization  (predictive distribution)
 % - - - - - - - - - - - - - - - - - -
 % grid based posterior 
 % - - - - - - - - - - - - - - - - - -
@@ -50,7 +50,7 @@ ds = readtable(strcat(dataset_name,'.csv'));
 
 
 %% F-fold CV  
-fold = 100;
+fold = 200;
 % irls cross-validation 
 % ---------------------------
 irls_cv(ds, is, fold);
