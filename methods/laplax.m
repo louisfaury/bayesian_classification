@@ -18,7 +18,6 @@ outp  = @(w) compute_output('logistic_sigmoid',w(1:is),w(is+1),ds(:,1:is),'linea
 % Finding the posterior MAP value
 max_iter = 10;
 lr = 1;
-log_posterior = @(x) log(prior(x)) + cross_entropy_loss_function(outp(x),ds(:,is+1));
 w = zeros(is+1,1);
 eps = 0.001;
 for i=1:max_iter
@@ -28,7 +27,7 @@ for i=1:max_iter
    d = (inv(So)+H)\g;
    w = w - lr*d;
    if (abs(lr*d)<eps)
-       break;                                   % stopping criterion 
+       break;                                                           % stopping criterion 
    end
 end
 
