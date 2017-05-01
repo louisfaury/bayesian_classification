@@ -18,31 +18,39 @@ ds = readtable(strcat(dataset_name,'.csv'));
 
 
 %% data visualization 
-visualize_data(ds, is);
+% visualize_data(ds, is);
 
 
 %% solution vizualisation
+
 % IRLS solution vizualisation 
 % ---------------------------
 % opt_up = struct('name','unpenalized','hp',[]);     % unpenalized IRLS
-% opt_L1 = struct('name','L1','hp',0.01);               % LASSO penalization
-% opt_L2 = struct('name','L2','hp',1);              % RIDGE penalization
+% opt_L1 = struct('name','L1','hp',0.01);            % LASSO penalization
+% opt_L2 = struct('name','L2','hp',1);               % RIDGE penalization
 % opt = opt_L1;
 % [w, prior, lc] = irls(ds, is, opt); 
 % visualize_solution(w(1:is), ds, is, lc, opt);
 % ---------------------------
+
 % ---------------------------
 % Bayesian learning and visualization
 % - - - - - - - - - - - - - - - - - -
+% defining a Gaussian prior 
+% prior.mean = zeros(is+1,1);
+% prior.covmat = 1*eye(is+1);%+ 10*double([1:is+1]==11)'*double([1:is+1]==11); + 10*double([1:is+1]==14)'*double([1:is+1]==14);
+
 % laplace approximation for posterior
 % - - - - - - - - - - - - - - - - - -
-% laplax_prior.mean = zeros(is+1,1);
-% laplax_prior.covmat = 10*eye(is+1);%+ 10*double([1:is+1]==11)'*double([1:is+1]==11) + 10*double([1:is+1]==14)'*double([1:is+1]==14);
-% [w,S] = laplax_normal(ds,is,laplax_prior);
-% visualize_pdb(ds,w,S,is)                  % Visualization  (predictive distribution)
+% [wL,SL] = laplax_normal(ds,is,prior);
+% visualize_pdb(ds,wL,SL,is)                  % Visualization  (predictive distribution)
 % - - - - - - - - - - - - - - - - - -
-% grid based posterior 
+% Variational Bayes 
 % - - - - - - - - - - - - - - - - - -
+%tic
+% [w,S] = vb_normal(ds, is, prior, wL, SL, true);
+%toc
+% visualize_pdb(ds,w,S,is)
 % - - - - - - - - - - - - - - - - - -
 % Expectation-propagation
 % - - - - - - - - - - - - - - - - - -
@@ -50,7 +58,7 @@ visualize_data(ds, is);
 
 
 %% F-fold CV  
-fold = 200;
+fold = 100;
 % irls cross-validation 
 % ---------------------------
 irls_cv(ds, is, fold);

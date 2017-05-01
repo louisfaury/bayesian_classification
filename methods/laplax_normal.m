@@ -19,7 +19,7 @@ outp  = @(w) compute_output('logistic_sigmoid',w(1:is),w(is+1),ds(:,1:is),'linea
 max_iter = 10;
 lr = 1;
 w = zeros(is+1,1);
-eps = 0.001;
+eps = 0.1;
 for i=1:max_iter
    X = [ds(:,1:is),ones(size(ds,1),1)]; y = outp(w); t = ds(:,is+1);    % design - pred - labels 
    H = X'*diag(y.*(1-y))*X;                                             % full hessian
