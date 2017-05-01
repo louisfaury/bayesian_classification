@@ -14,7 +14,7 @@ function visualize_pdb(ds,w,S,is)
 % come up with decision criteria (based on the covariance, trust in the
 % guess ? something like w+std -> other prediction ? 
 % plot the whole (might take some time)
-
+figure;
 % projection rule 
 data = ds(:,1:is);
 data = data ./ sqrt(var(data));
