@@ -1,5 +1,10 @@
 function pdb = pred_db_2d(x,y,w,S)
-%% TODO header
+% <============ HEADER =============>
+% @brief    : computes the predictive distribution (2d) 
+% @param    : ds <- dataset
+%             (w,S) <- Gaussian based posterior approximation 
+%             is   <- input dimension      
+% <============ HEADER =============>
 
 %%
 feat = [x;y];

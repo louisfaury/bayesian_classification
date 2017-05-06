@@ -32,29 +32,33 @@ ds = readtable(strcat(dataset_name,'.csv'));
 % [w, prior, lc] = irls(ds, is, opt); 
 % visualize_solution(w(1:is), ds, is, lc, opt);
 % ---------------------------
+%%TODO donut representation 
 
 % ---------------------------
 % Bayesian learning and visualization
 % - - - - - - - - - - - - - - - - - -
 % defining a Gaussian prior 
-% prior.mean = zeros(is+1,1);
-% prior.covmat = 1*eye(is+1);%+ 10*double([1:is+1]==11)'*double([1:is+1]==11); + 10*double([1:is+1]==14)'*double([1:is+1]==14);
+prior.mean = zeros(is+1,1);
+prior.covmat = eye(is+1);%+ 10*double([1:is+1]==11)'*double([1:is+1]==11); + 10*double([1:is+1]==14)'*double([1:is+1]==14);
 
 % laplace approximation for posterior
 % - - - - - - - - - - - - - - - - - -
-% [wL,SL] = laplax_normal(ds,is,prior);
-% visualize_pdb(ds,wL,SL,is)                  % Visualization  (predictive distribution)
+[wL,SL] = laplax_normal(ds,is,prior);
+visualize_pdb(ds,wL,SL,is)                  % Visualization  (predictive distribution)
 % - - - - - - - - - - - - - - - - - -
 % Variational Bayes 
 % - - - - - - - - - - - - - - - - - -
-%tic
 % [w,S] = vb_normal(ds, is, prior, wL, SL, true);
-%toc
 % visualize_pdb(ds,w,S,is)
 % - - - - - - - - - - - - - - - - - -
 % Expectation-propagation
 % - - - - - - - - - - - - - - - - - -
-    
+% TODO if time     
+
+% defining a Student prior 
+prior.nu = 100000*ones(is+1,1);
+[wL,SL1] = laplax_student(ds,is,prior);
+visualize_pdb(ds,wL,SL1,is)                  % Visualization  (predictive distribution)
 
 
 %% F-fold CV  

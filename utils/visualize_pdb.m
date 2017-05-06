@@ -14,7 +14,7 @@ function visualize_pdb(ds,w,S,is)
 % come up with decision criteria (based on the covariance, trust in the
 % guess ? something like w+std -> other prediction ? 
 % plot the whole (might take some time)
-figure;
+figure('units','normalized','outerposition',[0 0 1 1]); hold on;
 % projection rule 
 data = ds(:,1:is);
 data = data ./ sqrt(var(data));
@@ -35,17 +35,20 @@ for i=1:size(x2,2)
     end
 end
 map = ([ 0.1:0.01:0.9; 0.9:-0.01:0.1; 0.2*ones(1,81)])';
+subplot(1,2,1); hold on;
 contourf(X,Y,Z,40,'LineStyle','none'); hold on; contour(X,Y,Z,[0.05,0.25, 0.5, 0.75,0.95],'Showtext','on','LineColor','black'); colormap(map); colorbar; hold on; 
 
 hold on;
-for i=1:size(data,1)
-    if (ds(i,is+1))
-        color = [1, 0.1, 0.2];
-         m = plot(proj_data(i,1),proj_data(i,2),'o','MarkerSize',5,'MarkerFaceColor',color,'MarkerEdgeColor','black');
-    else
-        color = [0.1, 1, 0.2];
-        b = plot(proj_data(i,1),proj_data(i,2),'o','MarkerSize',5,'MarkerFaceColor',color,'MarkerEdgeColor','black');
-    end
-end
+a = scatter(proj_data(ds(:,is+1)==1,1),proj_data(ds(:,is+1)==1,2),'MarkerFaceColor',[1, 0.1, 0.2],'MarkerEdgeColor','black');
+b = scatter(proj_data(ds(:,is+1)==0,1),proj_data(ds(:,is+1)==0,2),'MarkerFaceColor',[0.1, 1, 0.2],'MarkerEdgeColor','black');
+legend([a,b],'True Label : 1','True Label : 0','Location','northwest');
+
+% Donut plot 
+subplot(1,2,2); hold on;
+pred_ppoint = pred_db(data,w,S);
+colormap(map);
+scatter(proj_data(:,1),proj_data(:,2),200*ones(size(proj_data,1),1),(pred_ppoint-min(pred_ppoint))/(max(pred_ppoint)-min(pred_ppoint)),'filled','MarkerEdgeColor','white');
+scatter(proj_data(ds(:,is+1)==1,1),proj_data(ds(:,is+1)==1,2),30*ones(size(proj_data(ds(:,is+1)==1,1))),'MarkerFaceColor',[1, 0.1, 0.2],'MarkerEdgeColor','white','LineWidth',2);
+scatter(proj_data(ds(:,is+1)==0,1),proj_data(ds(:,is+1)==0,2),30*ones(size(proj_data(ds(:,is+1)==0,1))),'MarkerFaceColor',[0.1, 1, 0.2],'MarkerEdgeColor','white','LineWidth',2);
 
 end

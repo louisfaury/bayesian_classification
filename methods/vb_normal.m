@@ -38,10 +38,10 @@ eps = 0.001;
 
 % Initialize the location scale Gaussian approximation distribution 
 mu    = wL;
-Sigma = SL;
+Sigma = sqrt(eigs(SL,1))*eye(m);
 
 % Optimization loop
-max_iter   = 10;
+max_iter   = 20;
 num_sample = 100;
 phi = [ds(:,1:is),ones(n,1)];
 lr = 0.01;
@@ -53,11 +53,11 @@ for iter = 1:max_iter
     for i=1:num_sample
        elbo(iter,1) = elbo(iter,1) - (1/num_sample) * (0.5*m*log(2*pi*det(Sigma*Sigma')) + 0.5*(samples(:,i)-mu)'*((Sigma*Sigma')\(samples(:,i)-mu))+ lpp(samples(:,i)));
        dMu = dMu + pP_o_p(phi,mu + Sigma*samples(:,i))/num_sample;
-       dSigma = dSigma + (pP_o_p(phi,mu + Sigma*samples(:,i))*samples(:,i)')/num_sample;
+       dSigma = dSigma + (pP2(phi,mu + Sigma*samples(:,i))*Sigma)/num_sample;
     end
     mu = mu + lr*dMu;
-    Sigma = Sigma + 0.1*lr*(dSigma+inv(Sigma));
-    lr = lr * 0.99;
+    Sigma = Sigma + 0.2*lr*(dSigma+inv(Sigma));
+    lr = lr * 0.98;
 end
 
 % ELBO plot

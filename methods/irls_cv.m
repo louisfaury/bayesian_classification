@@ -40,7 +40,7 @@ end
 
 % Laplace approximation 
 laplax_prior.mean = zeros(is+1,1);
-laplax_prior.covmat = 100*eye(is+1)+ 10*double([1:is+1]==11)'*double([1:is+1]==11) + 10*double([1:is+1]==14)'*double([1:is+1]==14);
+laplax_prior.covmat = 10*eye(is+1)+ 1*double([1:is+1]==11)'*double([1:is+1]==11) + 1*double([1:is+1]==14)'*double([1:is+1]==14);
 for f=1:fold
     [train_set,test_sest] = sample_train_test(dataset,tt_ratio);
     [wL1,SL1] = laplax_normal(train_set,is,laplax_prior);
@@ -49,7 +49,7 @@ for f=1:fold
     roc_points(iter,:) = roc_points(iter,:) + [roc.TP,roc.FP]/fold;
 end
 laplax_prior.mean = zeros(is+1,1);
-laplax_prior.covmat = 10*eye(is+1);
+laplax_prior.covmat = eye(is+1);
 iter = iter+1;
 for f=1:fold
     [train_set,test_sest] = sample_train_test(dataset,tt_ratio);
@@ -61,7 +61,7 @@ end
 iter = iter+1;
 % Variational Bayes (ELBO maximization)
 vb_prior.mean = zeros(is+1,1);
-vb_prior.covmat = 100*eye(is+1)+ 10*double([1:is+1]==11)'*double([1:is+1]==11) + 10*double([1:is+1]==14)'*double([1:is+1]==14);
+vb_prior.covmat = 10*eye(is+1)+ 1*double([1:is+1]==11)'*double([1:is+1]==11) + 1*double([1:is+1]==14)'*double([1:is+1]==14);
 for f=1:fold
     [train_set,test_sest] = sample_train_test(dataset,tt_ratio);
     [w,~] = vb_normal(train_set,is,vb_prior,wL1,SL1,false);
@@ -70,7 +70,7 @@ for f=1:fold
     roc_points(iter,:) = roc_points(iter,:) + [roc.TP,roc.FP]/fold;
 end
 vb_prior.mean = zeros(is+1,1);
-vb_prior.covmat = 10*eye(is+1);
+vb_prior.covmat = eye(is+1);
 iter = iter+1;
 for f=1:fold
     [train_set,test_sest] = sample_train_test(dataset,tt_ratio);
