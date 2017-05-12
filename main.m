@@ -43,12 +43,12 @@ prior.covmat = eye(is+1);%+ 10*double([1:is+1]==11)'*double([1:is+1]==11); + 10*
 
 % laplace approximation for posterior
 % - - - - - - - - - - - - - - - - - -
-[wL,SL] = laplax_normal(ds,is,prior);
-visualize_pdb(ds,wL,SL,is)                  % Visualization  (predictive distribution)
+%[wLg,SLg] = laplax_normal(ds,is,prior);
+%visualize_pdb(ds,wLg,SLg,is)                  % Visualization  (predictive distribution)
 % - - - - - - - - - - - - - - - - - -
 % Variational Bayes 
 % - - - - - - - - - - - - - - - - - -
-% [w,S] = vb_normal(ds, is, prior, wL, SL, true);
+% [w,S] = vb_normal(ds, is, prior, wLg, SLg, true);
 % visualize_pdb(ds,w,S,is)
 % - - - - - - - - - - - - - - - - - -
 % Expectation-propagation
@@ -56,13 +56,13 @@ visualize_pdb(ds,wL,SL,is)                  % Visualization  (predictive distrib
 % TODO if time     
 
 % defining a Student prior 
-prior.nu = 100000*ones(is+1,1);
-[wL,SL1] = laplax_student(ds,is,prior);
-visualize_pdb(ds,wL,SL1,is)                  % Visualization  (predictive distribution)
+prior.nu = 1.1*ones(is+1,1);
+%[wLs,SLs] = laplax_student(ds,is,prior,1);
+%visualize_pdb(ds,wLs,SLs,is)                  % Visualization  (predictive distribution)
 
 
 %% F-fold CV  
-fold = 100;
+fold = 20;
 % irls cross-validation 
 % ---------------------------
 irls_cv(ds, is, fold);

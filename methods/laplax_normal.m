@@ -16,9 +16,9 @@ prior = gaussianDb(is,mo,So); % start with centered Gaussian prior
 outp  = @(w) compute_output('logistic_sigmoid',w(1:is),w(is+1),ds(:,1:is),'linear');
 
 % Finding the posterior MAP value
-max_iter = 10;
-lr = 1;
-w = zeros(is+1,1);
+max_iter = 200;
+lr = 0.1;
+w = rand(is+1,1);
 eps = 0.1;
 for i=1:max_iter
    X = [ds(:,1:is),ones(size(ds,1),1)]; y = outp(w); t = ds(:,is+1);    % design - pred - labels 
@@ -29,6 +29,7 @@ for i=1:max_iter
    if (abs(lr*d)<eps)
        break;                                                           % stopping criterion 
    end
+   lr = lr*0.99;
 end
 
 % Estimating the Hessian of log(posterior) at MAP value 

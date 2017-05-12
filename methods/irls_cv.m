@@ -17,6 +17,8 @@ roc_points = zeros(n,2);
 
 %% run 
 iter = 1;
+fiter = 1;
+mess = strcat('Iteration :',{' '});
 for l=1:size(opt_names,2)
    switch (string(opt_names(l)))
        case 'L2'
@@ -32,6 +34,9 @@ for l=1:size(opt_names,2)
          [fmeasure, roc] = cv_binary_classification(w, test_sest, prior, is); 
          f_measures(iter,f) = fmeasure;
          roc_points(iter,:) = roc_points(iter,:) + [roc.TP,roc.FP]/fold;
+         message = string(strcat(mess,num2str(fiter),'/',num2str(n*fold)));
+         fprintf('%s\n',message);
+         fiter = fiter +1;
       end
       iter = iter +1;
    end
@@ -47,6 +52,9 @@ for f=1:fold
     [fmeasure, roc] = cv_binary_classification(wL1, test_sest, 1, is);
     f_measures(iter,f) = fmeasure;
     roc_points(iter,:) = roc_points(iter,:) + [roc.TP,roc.FP]/fold;
+    message = string(strcat(mess,num2str(fiter),'/',num2str(n*fold)));
+    fprintf('%s\n',message);
+    fiter = fiter +1;
 end
 laplax_prior.mean = zeros(is+1,1);
 laplax_prior.covmat = eye(is+1);
@@ -57,6 +65,9 @@ for f=1:fold
     [fmeasure, roc] = cv_binary_classification(wL2, test_sest, 1, is);
     f_measures(iter,f) = fmeasure;
     roc_points(iter,:) = roc_points(iter,:) + [roc.TP,roc.FP]/fold;
+    message = string(strcat(mess,num2str(fiter),'/',num2str(n*fold)));
+    fprintf('%s\n',message);
+    fiter = fiter +1;
 end
 iter = iter+1;
 % Variational Bayes (ELBO maximization)
@@ -68,6 +79,9 @@ for f=1:fold
     [fmeasure, roc] = cv_binary_classification(w, test_sest, 1, is);
     f_measures(iter,f) = fmeasure;
     roc_points(iter,:) = roc_points(iter,:) + [roc.TP,roc.FP]/fold;
+    message = string(strcat(mess,num2str(fiter),'/',num2str(n*fold)));
+    fprintf('%s\n',message);
+    fiter = fiter +1;
 end
 vb_prior.mean = zeros(is+1,1);
 vb_prior.covmat = eye(is+1);
@@ -78,6 +92,9 @@ for f=1:fold
     [fmeasure, roc] = cv_binary_classification(w, test_sest, 1, is);
     f_measures(iter,f) = fmeasure;
     roc_points(iter,:) = roc_points(iter,:) + [roc.TP,roc.FP]/fold;
+    message = string(strcat(mess,num2str(fiter),'/',num2str(n*fold)));
+    fprintf('%s\n',message);
+    fiter = fiter +1;
 end
 
 %% plots 

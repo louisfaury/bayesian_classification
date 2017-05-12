@@ -18,9 +18,9 @@ obj     = @(w) cross_entropy_loss_function(outp(w),t) - log(prod(tpdf(w,nu)));
 n       = is+1;
 
 % Finding the posterior MAP value
-max_iter    = 20;
+max_iter    = 40;
 lr          = 0.01;
-w           = zeros(is+1,1);
+w           = rand(is+1,1);
 obj_array   = zeros(max_iter,1);
 eps = 0.001;
 for i=1:max_iter
@@ -36,12 +36,13 @@ for i=1:max_iter
 end
 
 if (nargin>3 && plotflag)
+    figure;
     plot(obj_array,'b','LineWidth',2);
     xlabel('Iterations');
-    ylabel('$\log(p(\theta\,\vert\, X))$','interpreter','latex','FontSize',12);
+    ylabel('$-\log(p(\theta\,\vert\, X))$','interpreter','latex','FontSize',12);
     title('Laplace Log Posterior Minimization (Student Prior)');
 end
 
 wMap = w; 
-Sn = inv(X'*diag(y.*(1-y))*X + (1+nu).*(nu-w.^2)./((w.^2+nu).^2));
+Sn = inv( (X'*diag(y.*(1-y))*X + diag((1+nu).*(nu-w.^2)./((w.^2+nu).^2))) );
 end
