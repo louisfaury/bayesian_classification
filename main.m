@@ -56,13 +56,13 @@ prior.covmat = eye(is+1);%+ 10*double([1:is+1]==11)'*double([1:is+1]==11); + 10*
 % TODO if time     
 
 % defining a Student prior 
-prior.nu = 1.1*ones(is+1,1);
+prior.nu = 2*ones(is+1,1);
 %[wLs,SLs] = laplax_student(ds,is,prior,1);
 %visualize_pdb(ds,wLs,SLs,is)                  % Visualization  (predictive distribution)
 
 
 %% F-fold CV  
-fold = 20;
+fold = 100;
 % irls cross-validation 
 % ---------------------------
 irls_cv(ds, is, fold);
