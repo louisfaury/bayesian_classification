@@ -12,13 +12,12 @@ function [wMap,Sn] = laplax_normal(ds, is, prior)
 
 mo = prior.mean;
 So = prior.covmat;
-prior = gaussianDb(is,mo,So); % start with centered Gaussian prior 
 outp  = @(w) compute_output('logistic_sigmoid',w(1:is),w(is+1),ds(:,1:is),'linear');
 
 % Finding the posterior MAP value
-max_iter = 200;
-lr = 0.1;
-w = rand(is+1,1);
+max_iter = 40;
+lr = 1;
+w = zeros(is+1,1);
 eps = 0.1;
 for i=1:max_iter
    X = [ds(:,1:is),ones(size(ds,1),1)]; y = outp(w); t = ds(:,is+1);    % design - pred - labels 
