@@ -152,7 +152,7 @@ end
 
 %% plots 
 figure('units','normalized','outerposition',[0 0 1 1])
-subplot(1,2,1); boxplot(f_measures','Labels',{'IRLS','RIDGE : 0.01','RIDGE = 0.1','RIDGE = 1','Laplace 1','Laplace 2','VB 1','VB 2','Laplace 3','Laplace 4'});
+subplot(1,2,1); boxplot(f_measures','Labels',{'IRLS','RIDGE : 0.01','RIDGE = 0.1','RIDGE = 1','Laplace 1','Laplace 2','VB 1','VB 2','Laplace 3','Laplace 4','VB 3','VB 4'});
 xlabel('Method');
 ylabel('F-measure statistics');
 title(strcat(num2str(fold),'-fold cross validation using F-measure'));
@@ -165,7 +165,7 @@ end
 axis([0 1 0 1]);
 xlabel('False Positive'); ylabel('True Positive');
 title('ROC curve');
-l = legend('IRLS','RIDGE, $\lambda_2 = 0.01$', 'RIDGE, $\lambda_2 = 0.1$','RIDGE, $\lambda_2 = 1$','Laplace 1','Laplace 2','VB 1','VB 2','Laplace 3','Laplace 4');
+l = legend('IRLS','RIDGE, $\lambda_2 = 0.01$', 'RIDGE, $\lambda_2 = 0.1$','RIDGE, $\lambda_2 = 1$','Laplace 1','Laplace 2','VB 1','VB 2','Laplace 3','Laplace 4','VB 3','VB 4');
 set(l,'Interpreter','latex');
 
 
