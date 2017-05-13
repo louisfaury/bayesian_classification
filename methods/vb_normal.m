@@ -30,6 +30,7 @@ eps = 0.001;
         y       = compute_output('logistic_sigmoid',w(1:is),w(is+1),x(:,1:is),'linear');
         res     = (-B\(w-a) + x'*(t-y));
     end
+
 % computes d^2/dtheta(log p)
     function res = pP2(x,w)
        y = compute_output('logistic_sigmoid',w(1:is),w(is+1),x(:,1:is),'linear');
@@ -41,16 +42,18 @@ mu    = wL;
 Sigma = sqrt(eigs(SL,1))*eye(m);
 
 % Optimization loop
-max_iter   = 20;
-num_sample = 100;
+max_iter   = 50;
+num_sample = 30;
 phi = [ds(:,1:is),ones(n,1)];
-lr = 0.01;
+lr = 0.02;
 elbo = zeros(max_iter,1);
+elbo_arr = zeros(max_iter,num_sample);
+
 for iter = 1:max_iter
     samples = randn(m,num_sample);
     dMu = zeros(m,1);
-    dSigma = zeros(m);
-    for i=1:num_sample
+    dSigma  = zeros(m,m);
+   for i=1:num_sample
        elbo(iter,1) = elbo(iter,1) - (1/num_sample) * (0.5*m*log(2*pi*det(Sigma*Sigma')) + 0.5*(samples(:,i)-mu)'*((Sigma*Sigma')\(samples(:,i)-mu))+ lpp(samples(:,i)));
        dMu = dMu + pP_o_p(phi,mu + Sigma*samples(:,i))/num_sample;
        dSigma = dSigma + (pP2(phi,mu + Sigma*samples(:,i))*Sigma)/num_sample;

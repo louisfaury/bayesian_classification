@@ -36,10 +36,10 @@ mu    = wL;
 Sigma = sqrt(eigs(SL,1))*eye(m);
 
 % Optimization loop
-max_iter   = 50;
-num_sample = 1000;
+max_iter   = 40;
+num_sample = 100;
 phi = [ds(:,1:is),ones(n,1)];
-lr = 0.02;
+lr = 0.01;
 elbo = zeros(max_iter,1);
 for iter = 1:max_iter
     samples = randn(m,num_sample);

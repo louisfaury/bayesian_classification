@@ -11,7 +11,7 @@ function irls_cv(dataset, is, fold)
 tt_ratio = 0.6;
 opt_names = {'unpenalized','L2'};
 l2_penalties = [0.01, 0.1, 1];
-n = 7+size(l2_penalties,2);
+n = 9+size(l2_penalties,2);
 f_measures = zeros(n,fold);
 roc_points = zeros(n,2);
 
@@ -102,7 +102,33 @@ laplax_prior.nu = 2*ones(is+1,1);
 iter = iter+1;
 for f=1:fold
     [train_set,test_sest] = sample_train_test(dataset,tt_ratio);
-    [w,~] = laplax_student(train_set,is,laplax_prior,false);
+    [wL1,SL1] = laplax_student(train_set,is,laplax_prior,false);
+    [fmeasure, roc] = cv_binary_classification(wL1, test_sest, 1, is);
+    f_measures(iter,f) = fmeasure;
+    roc_points(iter,:) = roc_points(iter,:) + [roc.TP,roc.FP]/fold;
+    message = string(strcat(mess,num2str(fiter),'/',num2str(n*fold)));
+    fprintf('%s\n',message);
+    fiter = fiter +1;
+end
+
+laplax_prior.nu = 10*ones(is+1,1);
+iter = iter+1;
+for f=1:fold
+    [train_set,test_sest] = sample_train_test(dataset,tt_ratio);
+    [wL2,SL2] = laplax_student(train_set,is,laplax_prior,false);
+    [fmeasure, roc] = cv_binary_classification(wL2, test_sest, 1, is);
+    f_measures(iter,f) = fmeasure;
+    roc_points(iter,:) = roc_points(iter,:) + [roc.TP,roc.FP]/fold;
+    message = string(strcat(mess,num2str(fiter),'/',num2str(n*fold)));
+    fprintf('%s\n',message);
+    fiter = fiter +1;
+end
+% Variational Bayes (ELBO maximization)
+laplax_prior.nu = 2*ones(is+1,1);
+iter = iter+1;
+for f=1:fold
+    [train_set,test_sest] = sample_train_test(dataset,tt_ratio);
+    [w,~] = vb_student(train_set,is,laplax_prior,wL1,SL1,false);
     [fmeasure, roc] = cv_binary_classification(w, test_sest, 1, is);
     f_measures(iter,f) = fmeasure;
     roc_points(iter,:) = roc_points(iter,:) + [roc.TP,roc.FP]/fold;
@@ -115,7 +141,7 @@ laplax_prior.nu = 10*ones(is+1,1);
 iter = iter+1;
 for f=1:fold
     [train_set,test_sest] = sample_train_test(dataset,tt_ratio);
-    [w,~] = laplax_student(train_set,is,laplax_prior,false);
+    [w,~] = vb_student(train_set,is,laplax_prior,wL2,SL2,false);
     [fmeasure, roc] = cv_binary_classification(w, test_sest, 1, is);
     f_measures(iter,f) = fmeasure;
     roc_points(iter,:) = roc_points(iter,:) + [roc.TP,roc.FP]/fold;
@@ -123,7 +149,6 @@ for f=1:fold
     fprintf('%s\n',message);
     fiter = fiter +1;
 end
-
 
 %% plots 
 figure('units','normalized','outerposition',[0 0 1 1])

@@ -60,7 +60,7 @@ prior.nu = 2*ones(is+1,1);
 
 % laplace approximation for posterior
 % - - - - - - - - - - - - - - - - - -
-%[wLs,SLs] = laplax_student(ds,is,prior,1);
+[wLs,SLs] = laplax_student(ds,is,prior,0);
 %visualize_pdb(ds,wLs,SLs,is)                  % Visualization  (predictive distribution)
 % - - - - - - - - - - - - - - - - - -
 % Variational Bayes 
@@ -71,7 +71,7 @@ visualize_pdb(ds,w,S,is)
 
 
 %% F-fold CV  
-fold = 100;
+fold = 5;
 % irls cross-validation 
 % ---------------------------
 irls_cv(ds, is, fold);
