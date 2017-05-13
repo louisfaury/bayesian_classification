@@ -60,13 +60,13 @@ prior.nu = 2*ones(is+1,1);
 
 % laplace approximation for posterior
 % - - - - - - - - - - - - - - - - - -
-[wLs,SLs] = laplax_student(ds,is,prior,0);
+%[wLs,SLs] = laplax_student(ds,is,prior,0);
 %visualize_pdb(ds,wLs,SLs,is)                  % Visualization  (predictive distribution)
 % - - - - - - - - - - - - - - - - - -
 % Variational Bayes 
 % - - - - - - - - - - - - - - - - - -
-[w,S] = vb_student(ds, is, prior, wLg, SLg, true);
-visualize_pdb(ds,w,S,is)
+%[w,S] = vb_student(ds, is, prior, wLg, SLg, true);
+%visualize_pdb(ds,w,S,is)
 
 
 

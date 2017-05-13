@@ -53,7 +53,6 @@ for iter = 1:max_iter
     mu = mu + lr*dMu;
     Sigma = Sigma + 0.2*lr*(dSigma+inv(Sigma));
     lr = lr * 0.97;
-    elbo(iter)
 end
 
 % ELBO plot
