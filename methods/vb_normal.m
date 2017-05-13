@@ -68,7 +68,7 @@ if (plotflag)
     title('ELBO stochastic maximization');
 end
 
-%% TODO : control over ELBOW
+% Final assignation 
 w = mu;
 S = Sigma*Sigma';
 

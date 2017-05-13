@@ -57,12 +57,21 @@ prior.covmat = eye(is+1);%+ 10*double([1:is+1]==11)'*double([1:is+1]==11); + 10*
 
 % defining a Student prior 
 prior.nu = 2*ones(is+1,1);
+
+% laplace approximation for posterior
+% - - - - - - - - - - - - - - - - - -
 %[wLs,SLs] = laplax_student(ds,is,prior,1);
 %visualize_pdb(ds,wLs,SLs,is)                  % Visualization  (predictive distribution)
+% - - - - - - - - - - - - - - - - - -
+% Variational Bayes 
+% - - - - - - - - - - - - - - - - - -
+[w,S] = vb_student(ds, is, prior, wLg, SLg, true);
+visualize_pdb(ds,w,S,is)
+
 
 
 %% F-fold CV  
-fold = 20;
+fold = 100;
 % irls cross-validation 
 % ---------------------------
 irls_cv(ds, is, fold);
