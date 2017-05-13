@@ -62,7 +62,7 @@ prior.nu = 2*ones(is+1,1);
 
 
 %% F-fold CV  
-fold = 100;
+fold = 20;
 % irls cross-validation 
 % ---------------------------
 irls_cv(ds, is, fold);

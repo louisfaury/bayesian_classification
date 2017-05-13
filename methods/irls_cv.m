@@ -45,7 +45,7 @@ end
 
 % Laplace approximation 
 laplax_prior.mean = zeros(is+1,1);
-laplax_prior.covmat = 10*eye(is+1)+ 1*double([1:is+1]==11)'*double([1:is+1]==11) + 1*double([1:is+1]==14)'*double([1:is+1]==14);
+laplax_prior.covmat = 10*eye(is+1)- 9*double([1:is+1]==11)'*double([1:is+1]==11) - 9*double([1:is+1]==14)'*double([1:is+1]==14);
 for f=1:fold
     [train_set,test_sest] = sample_train_test(dataset,tt_ratio);
     [wL1,SL1] = laplax_normal(train_set,is,laplax_prior);
@@ -72,7 +72,7 @@ end
 iter = iter+1;
 % Variational Bayes (ELBO maximization)
 vb_prior.mean = zeros(is+1,1);
-vb_prior.covmat = 10*eye(is+1)+ 1*double([1:is+1]==11)'*double([1:is+1]==11) + 1*double([1:is+1]==14)'*double([1:is+1]==14);
+vb_prior.covmat = 10*eye(is+1)- 9*double([1:is+1]==11)'*double([1:is+1]==11) - 9*double([1:is+1]==14)'*double([1:is+1]==14);
 for f=1:fold
     [train_set,test_sest] = sample_train_test(dataset,tt_ratio);
     [w,~] = vb_normal(train_set,is,vb_prior,wL1,SL1,false);
@@ -127,7 +127,7 @@ end
 
 %% plots 
 figure('units','normalized','outerposition',[0 0 1 1])
-subplot(1,2,1); boxplot(f_measures','Labels',{'IRLS','RIDGE : 0.01','RIDGE = 0.1','RIDGE = 1','Laplace 1','Laplace 2','VB 1','VB 2'});
+subplot(1,2,1); boxplot(f_measures','Labels',{'IRLS','RIDGE : 0.01','RIDGE = 0.1','RIDGE = 1','Laplace 1','Laplace 2','VB 1','VB 2','Laplace 3','Laplace 4'});
 xlabel('Method');
 ylabel('F-measure statistics');
 title(strcat(num2str(fold),'-fold cross validation using F-measure'));
@@ -140,7 +140,7 @@ end
 axis([0 1 0 1]);
 xlabel('False Positive'); ylabel('True Positive');
 title('ROC curve');
-l = legend('IRLS','RIDGE, $\lambda_2 = 0.01$', 'RIDGE, $\lambda_2 = 0.1$','RIDGE, $\lambda_2 = 1$','Laplace 1','Laplace 2','VB 1','VB 2');
+l = legend('IRLS','RIDGE, $\lambda_2 = 0.01$', 'RIDGE, $\lambda_2 = 0.1$','RIDGE, $\lambda_2 = 1$','Laplace 1','Laplace 2','VB 1','VB 2','Laplace 3','Laplace 4');
 set(l,'Interpreter','latex');
 
 
