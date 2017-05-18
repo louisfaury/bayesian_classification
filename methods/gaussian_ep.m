@@ -20,7 +20,7 @@ targets = ds(:,m);      % targets
 % r = (Sigma)^{-1}*mu
 % beta = Sigma^{-1}
 r       = zeros(m,n);               % (r1,r2,..,rn)
-beta    = repmat(eye(m,m),1,1,n+1);  
+beta    = repmat(0.1*eye(m,m),1,1,n+1);  
 beta(:,:,n+1) = prior.covmat;
 
 % Gaussian EP loop 
