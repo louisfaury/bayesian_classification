@@ -43,7 +43,7 @@ prior.covmat = eye(is+1)+ 10*double([1:is+1]==11)'*double([1:is+1]==11); + 10*do
 
 % laplace approximation for posterior
 % - - - - - - - - - - - - - - - - - -
-[wLg,SLg] = laplax_normal(ds,is,prior);
+% [wLg,SLg] = laplax_normal(ds,is,prior);
 %visualize_pdb(ds,wLg,SLg,is)                  % Visualization  (predictive distribution)
 % - - - - - - - - - - - - - - - - - -
 % Variational Bayes 
@@ -53,11 +53,11 @@ prior.covmat = eye(is+1)+ 10*double([1:is+1]==11)'*double([1:is+1]==11); + 10*do
 % - - - - - - - - - - - - - - - - - -
 % Expectation-propagation
 % - - - - - - - - - - - - - - - - - -
-[wEp,SEp] = gaussian_ep(ds, is, prior,1);    
-visualize_pdb(ds,wEp,SEp,is)
+% [wEp,SEp] = gaussian_ep(ds, is, prior,1);    
+% visualize_pdb(ds,wEp,SEp,is)
 
 % defining a Student prior 
-prior.nu = 2*ones(is+1,1);
+% prior.nu = 2*ones(is+1,1);
 
 % laplace approximation for posterior
 % - - - - - - - - - - - - - - - - - -
