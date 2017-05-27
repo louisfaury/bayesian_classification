@@ -17,11 +17,9 @@ m       = is+1;         % predictor dimensionality
 targets = ds(:,m);      % targets 
 
 % Initializes approximating distribution natural parameters (exponential family)
-% r = (Sigma)^{-1}*mu
-% beta = Sigma^{-1}
 r       = zeros(m,n);               % (r1,r2,..,rn)
-beta    = repmat(0.1*eye(m,m),1,1,n+1);  
-beta(:,:,n+1) = prior.covmat;
+beta    = repmat(eye(m,m),1,1,n+1);  
+beta(:,:,n+1) = inv(prior.covmat);
 
 % Gaussian EP loop 
 outer_loop = 15;
@@ -56,9 +54,10 @@ for outer_iter=1:outer_loop
     r_var_array(outer_iter) = max_change_r;
     beta_var_array(outer_iter) = max_change_beta;
 end
+
 % Returning the approximation mean and variance (Gaussian approx)
 S = inv(sum(beta,3));
-w = S*(r* ones(n,1)+prior.mean);
+w = S*(r*ones(n,1));
 
 % Plots
 if (plotflag)

@@ -1,5 +1,6 @@
 function [E,Sigma] = hybrid_grid_based_approx(mu,nu,ti)
 
+ti = 2*ti-1;
 % Defines hybrid 
 sig = @(x) 1/(1+exp(-x));
 h   = @(w) sig(ti*w) * exp(-0.5*(w-mu)^2/nu);
@@ -10,7 +11,6 @@ w           = mu;
 lr          = 0.05;
 log_hybrid  = zeros(max_iter,1);
 eps = 0.00001;
-ti = 2*ti-1;
 for iter=1:max_iter
     d = ti*(1-sig(ti*w))-(w-mu)/nu;
     w = w + lr*d;
@@ -21,7 +21,7 @@ for iter=1:max_iter
 end
 
 % Compute grid 
-grid_size = 100;
+grid_size = 50;
 bound_grid = 10*sqrt(1 / ( 1/nu + sig(ti*w)*(1-sig(ti*w)) ));
 grid = linspace(w-bound_grid/2,w+bound_grid/2,grid_size)';
 h_on_grid = arrayfun(h,grid);

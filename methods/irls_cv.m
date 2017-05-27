@@ -8,7 +8,7 @@ function irls_cv(dataset, is, fold)
 % <============ HEADER =============>
 
 %% hyper-parameters 
-tt_ratio = 0.6;
+tt_ratio = 0.5;
 opt_names = {'unpenalized','L2'};
 l2_penalties = [0.01, 0.1, 1];
 n = 9+size(l2_penalties,2);
