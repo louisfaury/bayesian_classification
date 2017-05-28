@@ -18,11 +18,11 @@ obj     = @(w) cross_entropy_loss_function(outp(w),t) - log(prod(tpdf(w,nu)));
 n       = is+1;
 
 % Finding the posterior MAP value
-max_iter    = 40;
-lr          = 0.01;
-w           = rand(is+1,1);
+max_iter    = 100;
+lr          = 0.02;
+w           = randn(is+1,1);
 obj_array   = zeros(max_iter,1);
-eps = 0.001;
+eps = 0.01;
 for i=1:max_iter
    X = [ds(:,1:is),ones(size(ds,1),1)]; y = outp(w);    % design - pred - labels 
    g = (w.*(nu+1))./(nu+w.^2) -X'*(t-y);                % gradient

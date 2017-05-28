@@ -7,7 +7,7 @@ clc;
 addpath(genpath('dataset'));
 addpath(genpath('methods'));
 addpath(genpath('utils'));
-
+addpath(genpath('lib/sparse_bayes'))
 %% load dataset 
 %dataset_name = 'bcw';
 %dataset_name = 'piddr';
@@ -39,12 +39,12 @@ ds = readtable(strcat(dataset_name,'.csv'));
 % - - - - - - - - - - - - - - - - - -
 % defining a Gaussian prior 
 prior.mean = zeros(is+1,1);
-prior.covmat = eye(is+1)+ 10*double([1:is+1]==11)'*double([1:is+1]==11); + 10*double([1:is+1]==14)'*double([1:is+1]==14);
+prior.covmat = eye(is+1), % - 9*double([1:is+1]==11)'*double([1:is+1]==11); - 9*double([1:is+1]==14)'*double([1:is+1]==14);
 
 % laplace approximation for posterior
 % - - - - - - - - - - - - - - - - - -
 % [wLg,SLg] = laplax_normal(ds,is,prior);
-%visualize_pdb(ds,wLg,SLg,is)                  % Visualization  (predictive distribution)
+% visualize_pdb(ds,wLg,SLg,is)                  % Visualization  (predictive distribution)
 % - - - - - - - - - - - - - - - - - -
 % Variational Bayes 
 % - - - - - - - - - - - - - - - - - -
@@ -58,18 +58,23 @@ prior.covmat = eye(is+1)+ 10*double([1:is+1]==11)'*double([1:is+1]==11); + 10*do
 
 % defining a Student prior 
 % prior.nu = 2*ones(is+1,1);
-
 % laplace approximation for posterior
 % - - - - - - - - - - - - - - - - - -
-%[wLs,SLs] = laplax_student(ds,is,prior,0);
-%visualize_pdb(ds,wLs,SLs,is)                  % Visualization  (predictive distribution)
+% [wLs,SLs] = laplax_student(ds,is,prior,true);
+% visualize_pdb(ds,wLs,SLs,is)                  % Visualization  (predictive distribution)
 % - - - - - - - - - - - - - - - - - -
 % Variational Bayes 
 % - - - - - - - - - - - - - - - - - -
-%[w,S] = vb_student(ds, is, prior, wLg, SLg, true);
-%visualize_pdb(ds,w,S,is)
+% [w,S] = vb_student(ds, is, prior, wLs, SLs, true);
+% visualize_pdb(ds,w,S,is)
 
 
+% - - - - - - - - - - - - - - - - - -
+% Non-linear method (RVR)
+% - - - - - - - - - - - - - - - - - -
+width = 2;
+%[w,y] = rvm_train(ds,is,width);
+rvm_visualize(ds,is,width);
 
 %% F-fold CV  
 fold = 100;

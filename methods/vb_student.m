@@ -36,7 +36,7 @@ mu    = wL;
 Sigma = sqrt(eigs(SL,1))*eye(m);
 
 % Optimization loop
-max_iter   = 40;
+max_iter   = 200;
 num_sample = 100;
 phi = [ds(:,1:is),ones(n,1)];
 lr = 0.01;
@@ -52,7 +52,7 @@ for iter = 1:max_iter
     end
     mu = mu + lr*dMu;
     Sigma = Sigma + 0.2*lr*(dSigma+inv(Sigma));
-    lr = lr * 0.97;
+    lr = lr * 0.99;
 end
 
 % ELBO plot
