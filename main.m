@@ -72,8 +72,8 @@ prior.covmat = eye(is+1), % - 9*double([1:is+1]==11)'*double([1:is+1]==11); - 9*
 % - - - - - - - - - - - - - - - - - -
 % Non-linear method (RVR)
 % - - - - - - - - - - - - - - - - - -
-width = 2;
-%[w,y] = rvm_train(ds,is,width);
+width = 0.5;
+[w,y] = rvm_train(ds,is,width);
 rvm_visualize(ds,is,width);
 
 %% F-fold CV  

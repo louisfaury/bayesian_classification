@@ -14,6 +14,7 @@ BASIS	= exp(-distSquared(inputs,inputs)/(width^2));
 BASIS = [BASIS,ones(n,1)];
 sig = @(x) 1/(1+exp(-x));
 
+
 % Training
 [Parameter, Hyperparameter, Diagnostic] = ...
     SparseBayes('Bernoulli', BASIS, targets);
@@ -22,7 +23,7 @@ w_infer(Parameter.Relevant)	= Parameter.Value;
 
 % Predictions 
 y = arrayfun(sig,BASIS*w_infer);
-y = double(y>=0.5);
+%y = double(y>=0.5);
 end
 
 
