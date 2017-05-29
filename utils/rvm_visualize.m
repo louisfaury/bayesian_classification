@@ -36,7 +36,7 @@ contourf(X,Y,Z,40,'LineStyle','none'); hold on; contour(X,Y,Z,[0.25,0.5,0.75],'S
 hold on;
 a = scatter(proj_data(ds(:,is+1)==1,1),proj_data(ds(:,is+1)==1,2),'MarkerFaceColor',[1, 0.1, 0.2],'MarkerEdgeColor','black');
 b = scatter(proj_data(ds(:,is+1)==0,1),proj_data(ds(:,is+1)==0,2),'MarkerFaceColor',[0.1, 1, 0.2],'MarkerEdgeColor','black');
-c = scatter(proj_data(w(1:n)~=0,1),proj_data(w(1:n)~=0,2),'MarkerEdgeColor',[0.1,0.3,0.5],'LineWidth',1.5);
+c = scatter(proj_data(w(1:n)~=0,1),proj_data(w(1:n)~=0,2),'MarkerFaceColor',[0.4,0.7,1],'MarkerEdgeColor',[1 1 1],'LineWidth',1.2);
 legend([a,b,c],'True Label : 1','True Label : 0','Relevant Vector','Location','northwest');
 
 end

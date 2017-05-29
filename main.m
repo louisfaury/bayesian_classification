@@ -32,7 +32,6 @@ ds = readtable(strcat(dataset_name,'.csv'));
 % [w, prior, lc] = irls(ds, is, opt); 
 % visualize_solution(w(1:is), ds, is, lc, opt);
 % ---------------------------
-%%TODO donut representation 
 
 % ---------------------------
 % Bayesian learning and visualization
@@ -72,8 +71,8 @@ prior.covmat = eye(is+1), % - 9*double([1:is+1]==11)'*double([1:is+1]==11); - 9*
 % - - - - - - - - - - - - - - - - - -
 % Non-linear method (RVR)
 % - - - - - - - - - - - - - - - - - -
-width = 0.5;
-[w,y] = rvm_train(ds,is,width);
+width = 2;
+%[w,y] = rvm_train(ds,is,width);
 rvm_visualize(ds,is,width);
 
 %% F-fold CV  
